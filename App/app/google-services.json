@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "21048278568",
+    "firebase_url": "https://hellyeeeah-c3933.firebaseio.com",
+    "project_id": "hellyeeeah-c3933",
+    "storage_bucket": "hellyeeeah-c3933.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21048278568:android:4866dbd30ca0cd6796ff1d",
+        "android_client_info": {
+          "package_name": "com.poturalakonieczka.hellyeeeah"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "21048278568-ep7lbkp75qqjt28if308q0c7i4uifm58.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1splsLYWtoNdKhlOtBWFFw1U3DUOSPQE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "21048278568-ep7lbkp75qqjt28if308q0c7i4uifm58.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
