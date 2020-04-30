@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.facebook.AccessToken
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
+import com.facebook.*
 import com.facebook.login.LoginResult
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FacebookAuthProvider
@@ -20,9 +17,10 @@ import com.google.android.gms.tasks.Task;
 
 class MainActivity : AppCompatActivity() {
     private var callbackManager: CallbackManager? = null
-    private var fbAuth: FirebaseAuth? = null
     private var authListener: AuthStateListener? = null
     private val TAG = "FacebookAuth"
+    private var fbAuth: FirebaseAuth? = null
+
 
     private fun exchangeAccessToken(token: AccessToken) {
         val credential = FacebookAuthProvider.getCredential(token.token)
@@ -37,8 +35,11 @@ class MainActivity : AppCompatActivity() {
                     ).show()
                 }
             }
+
     }
     override fun onCreate(savedInstanceState: Bundle?) {
+        FacebookSdk.sdkInitialize(this)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         callbackManager = CallbackManager.Factory.create();
@@ -50,6 +51,10 @@ class MainActivity : AppCompatActivity() {
                 override fun onSuccess(loginResult: LoginResult) {
                     Log.d(TAG, "onSuccess: $loginResult")
                     exchangeAccessToken(loginResult.accessToken)
+                    //finish()
+                    Log.d("My-deb", "Zalogowanie sie")
+                    val intent = Intent(this@MainActivity, UserActivity::class.java)
+                    startActivity(intent)
                 }
 
                 override fun onCancel() {
