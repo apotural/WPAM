@@ -30,6 +30,9 @@ class UserDataFragment : Fragment() {
         Log.d("My-deb", "Create user data fragment")
         var email = viewModel.getUser()!!.email
         textView2.text = email
+        //val imie = viewModel.getUserName()
+        val kursant = viewModel.downloadKursant()
+
 
 
     }

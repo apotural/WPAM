@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onSuccess(loginResult: LoginResult) {
                     Log.d(TAG, "onSuccess: $loginResult")
                     exchangeAccessToken(loginResult.accessToken)
-                    //finish()
+                    finish()
                     Log.d("My-deb", "Zalogowanie sie")
                     val intent = Intent(this@MainActivity, UserActivity::class.java)
                     startActivity(intent)
