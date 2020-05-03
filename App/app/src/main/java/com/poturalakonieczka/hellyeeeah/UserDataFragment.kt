@@ -31,7 +31,7 @@ class UserDataFragment : Fragment() {
         var email = viewModel.getUser()!!.email
         textView2.text = email
         //val imie = viewModel.getUserName()
-        val kursant = viewModel.downloadKursant()
+        //val kursant = viewModel.downloadKursant()
 
 
 
