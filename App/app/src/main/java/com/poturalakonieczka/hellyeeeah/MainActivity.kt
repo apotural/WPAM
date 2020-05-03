@@ -41,11 +41,15 @@ class MainActivity : AppCompatActivity() {
         FacebookSdk.sdkInitialize(this)
 
         super.onCreate(savedInstanceState)
+
+
         setContentView(R.layout.activity_main)
         callbackManager = CallbackManager.Factory.create();
 
+
+
         loginButton.setReadPermissions("email", "public_profile");
-       // Settings.getApplicationSignature(Context)
+
         loginButton.registerCallback(callbackManager,
             object : FacebookCallback<LoginResult> {
                 override fun onSuccess(loginResult: LoginResult) {
@@ -71,14 +75,28 @@ class MainActivity : AppCompatActivity() {
         authListener = AuthStateListener { firebaseAuth ->
             val user = firebaseAuth.currentUser
             if (user != null) {
-                //emailText.text = user.email
-                //statusText.text = "Signed In"
+                finish()
+                val intent = Intent(this@MainActivity, UserActivity::class.java)
+                startActivity(intent)
             } else {
-                //emailText.text = ""
-                //statusText.text = "Signed Out"
+
 
             }
         }
+        fbAuth = FirebaseAuth.getInstance()
+
+        authListener = AuthStateListener { firebaseAuth ->
+            val user = firebaseAuth.currentUser
+            if (user != null) {
+                finish()
+                val intent = Intent(this@MainActivity, UserActivity::class.java)
+                startActivity(intent)
+            } else {
+
+
+            }
+        }
+        
 //        if (savedInstanceState == null) {
 //            supportFragmentManager.beginTransaction()
 //                .replace(R.id.container, FacebookLoginFragment.newInstance())
