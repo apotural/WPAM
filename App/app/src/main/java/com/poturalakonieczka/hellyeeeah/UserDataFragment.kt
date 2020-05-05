@@ -1,5 +1,6 @@
 package com.poturalakonieczka.hellyeeeah
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,8 +9,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.user_data_fragment.*
+import yalantis.com.sidemenu.interfaces.ScreenShotable
 
-class UserDataFragment : Fragment() {
+
+class UserDataFragment : Fragment(), ScreenShotable {
     companion object {
         fun newInstance() = UserDataFragment()
     }
@@ -18,9 +21,7 @@ class UserDataFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View {
-
         return inflater.inflate(R.layout.user_data_fragment, container, false)
-
     }
 
 
@@ -35,6 +36,13 @@ class UserDataFragment : Fragment() {
 
 
 
+    }
+    override fun getBitmap(): Bitmap {
+        TODO("Not yet implemented")
+    }
+
+    override fun takeScreenShot() {
+        TODO("Not yet implemented")
     }
 
 }
