@@ -54,7 +54,7 @@ class UserActivity : AppCompatActivity(){
         }
         main_drawer.addDrawerListener(drawerToggle as ActionBarDrawerToggle)
         (drawerToggle as ActionBarDrawerToggle).isDrawerIndicatorEnabled = false; //disable "hamburger to arrow" drawable
-        (drawerToggle as ActionBarDrawerToggle).setHomeAsUpIndicator(R.drawable.ic_logo); //set your own
+        (drawerToggle as ActionBarDrawerToggle).setHomeAsUpIndicator(R.drawable.ic_logo_small); //set your own
         (drawerToggle as ActionBarDrawerToggle).syncState()
 
     }
