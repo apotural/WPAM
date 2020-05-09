@@ -27,12 +27,11 @@ class MainActivity : AppCompatActivity() {
         fbAuth!!.signInWithCredential(credential)
             .addOnCompleteListener(this
             ) { task ->
-                if (!task.isSuccessful) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "Authentication failed.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                if (task.isSuccessful) {
+                    finish()
+                    Log.d("My-deb", "Zalogowanie sie")
+                    val intent = Intent(this@MainActivity, UserActivity::class.java)
+                    startActivity(intent)
                 }
             }
 
@@ -55,10 +54,6 @@ class MainActivity : AppCompatActivity() {
                 override fun onSuccess(loginResult: LoginResult) {
                     Log.d(TAG, "onSuccess: $loginResult")
                     exchangeAccessToken(loginResult.accessToken)
-                    finish()
-                    Log.d("My-deb", "Zalogowanie sie")
-                    val intent = Intent(this@MainActivity, UserActivity::class.java)
-                    startActivity(intent)
                 }
 
                 override fun onCancel() {

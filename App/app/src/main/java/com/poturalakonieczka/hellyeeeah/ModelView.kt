@@ -19,6 +19,10 @@ class ModelView : ViewModel() {
     private var kursant: Kursant? = null
     private val grupy: MutableList<Grupa?> = mutableListOf<Grupa?>()
 
+    fun updateUser(){
+        fbAuth= FirebaseAuth.getInstance()
+        user =  fbAuth!!.currentUser
+    }
 
     fun getUser(): FirebaseUser? {
         return user
