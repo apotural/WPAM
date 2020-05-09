@@ -2,29 +2,29 @@ package com.poturalakonieczka.hellyeeeah
 
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import yalantis.com.sidemenu.interfaces.ScreenShotable
+import kotlinx.android.synthetic.main.user_data_fragment.*
 
-class GroupFragment : Fragment(), ScreenShotable {
+class GroupFragment : Fragment() {
 
-    private val containerView: View? = null
+    companion object {
+        fun newInstance() = GroupFragment()
+    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    private lateinit var viewModel: ModelView
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.user_groups_fragment, container, false)
     }
 
-
-    override fun getBitmap(): Bitmap {
-        TODO("Not yet implemented")
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        textView2.text = "group"
     }
 
-    override fun takeScreenShot() {
-        TODO("Not yet implemented")
-    }
 }

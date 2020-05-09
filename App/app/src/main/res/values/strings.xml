@@ -6,4 +6,6 @@
 
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="Open">open</string>
+    <string name="Close">close</string>
 </resources>

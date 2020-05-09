@@ -1,18 +1,16 @@
 package com.poturalakonieczka.hellyeeeah
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.user_data_fragment.*
-import yalantis.com.sidemenu.interfaces.ScreenShotable
 
 
-class UserDataFragment : Fragment(), ScreenShotable {
+class UserDataFragment : Fragment() {
     companion object {
         fun newInstance() = UserDataFragment()
     }
@@ -27,22 +25,12 @@ class UserDataFragment : Fragment(), ScreenShotable {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(ModelView::class.java)
+        viewModel = ViewModelProvider(this).get(ModelView::class.java)
         Log.d("My-deb", "Create user data fragment")
         var email = viewModel.getUser()!!.email
         textView2.text = email
         //val imie = viewModel.getUserName()
         //val kursant = viewModel.downloadKursant()
 
-
-
     }
-    override fun getBitmap(): Bitmap {
-        TODO("Not yet implemented")
-    }
-
-    override fun takeScreenShot() {
-        TODO("Not yet implemented")
-    }
-
 }

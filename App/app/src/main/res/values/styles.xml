@@ -7,6 +7,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-
+    <style name="NavigationStyle" >
+        <item name="listPreferredItemHeightSmall">90dp</item>
+    </style>
 
 </resources>

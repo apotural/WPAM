@@ -7,25 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import kotlinx.android.synthetic.main.user_data_fragment.*
 import yalantis.com.sidemenu.interfaces.ScreenShotable
 
 
-class CalendarFragment: Fragment(), ScreenShotable{
-    private val containerView: View? = null
+class CalendarFragment: Fragment(){
+    companion object {
+        fun newInstance() = CalendarFragment()
+    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    private lateinit var viewModel: ModelView
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.user_calendar_fragment, container, false)
     }
 
-
-    override fun getBitmap(): Bitmap {
-        TODO("Not yet implemented")
-    }
-
-    override fun takeScreenShot() {
-        TODO("Not yet implemented")
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        textView2.text = "calendar"
     }
 }
