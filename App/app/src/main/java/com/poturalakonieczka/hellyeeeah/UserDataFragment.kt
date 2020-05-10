@@ -27,8 +27,10 @@ class UserDataFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProvider(this).get(ModelView::class.java)
         Log.d("My-deb", "Create user data fragment")
+
         if(   viewModel.getUser() != null){
             var email = viewModel.getUser()!!.email
+            viewModel.downloadKursant()
             textView2.text = email
         }else{
             textView2.text = "empty user"

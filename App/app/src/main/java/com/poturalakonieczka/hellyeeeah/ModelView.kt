@@ -7,6 +7,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.poturalakonieczka.hellyeeeah.database.Grupa
 import com.poturalakonieczka.hellyeeeah.database.Kursant
+import com.poturalakonieczka.hellyeeeah.database.ZajeciaDodatkowe
+import com.poturalakonieczka.hellyeeeah.database.ZajecieDoOdrobienia
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -18,11 +20,8 @@ class ModelView : ViewModel() {
     private var db = FirebaseFirestore.getInstance()
     private var kursant: Kursant? = null
     private val grupy: MutableList<Grupa?> = mutableListOf<Grupa?>()
-
-    fun updateUser(){
-        fbAuth= FirebaseAuth.getInstance()
-        user =  fbAuth!!.currentUser
-    }
+    private var zajeciaDodatkowe: ZajeciaDodatkowe? = null
+    private var zajeciaDoOdrobienia: ZajecieDoOdrobienia? = null
 
     fun getUser(): FirebaseUser? {
         return user
@@ -69,8 +68,10 @@ class ModelView : ViewModel() {
                     Log.d("My_log", "got userName")
                     kursant = document.toObject(Kursant::class.java)
                     downloadGrupy()
-                    //val obj = mapToJSON(document.data!!)
-                    
+                    downloadZajeciaDodatkowe()
+                    downloadZajeciaDoOdrobienia()
+//                    val obj = mapToJSON(document.data!!)
+//                    Log.d(TAG, obj.toString())
                 } else {
 
                 }
@@ -85,6 +86,44 @@ class ModelView : ViewModel() {
         return kursant
     }
 
+    private fun downloadZajeciaDoOdrobienia(){
+        if(kursant != null){
+            user?.email?.let { db.collection("Kursanci").document(it) }
+
+            val docRef = user?.email?.let {
+                db.collection("Kursanci/$it/zajecia").document("nieobecnosc")
+            }
+            docRef?.get()?.addOnSuccessListener { document ->
+                if (document != null) {
+                    zajeciaDoOdrobienia = document.toObject(ZajecieDoOdrobienia::class.java)
+                }
+            }
+                ?.addOnFailureListener { exception ->
+
+                }
+
+        }
+    }
+
+    private fun downloadZajeciaDodatkowe(){
+        if(kursant != null){
+            user?.email?.let { db.collection("Kursanci").document(it) }
+
+            val docRef = user?.email?.let {
+                db.collection("Kursanci/$it/zajecia").document("dodatkowe")
+            }
+            docRef?.get()?.addOnSuccessListener { document ->
+                    if (document != null) {
+                        zajeciaDodatkowe = document.toObject(ZajeciaDodatkowe::class.java)
+                    }
+                }
+                ?.addOnFailureListener { exception ->
+
+                }
+
+        }
+    }
+
     private fun downloadGrupy(){
         Log.d(TAG, "pobieramy grupy")
         //zakladamy ze mamu kursanta -> wiec przejezdzamy forem po wszystkich jego z listy i tworzymy liste grup
@@ -95,9 +134,10 @@ class ModelView : ViewModel() {
                 Log.d(TAG, "dowloading groups")
                 doc.get()
                     .addOnSuccessListener { result ->
-                        //val grupa = mapToJSON(result.data!!)
+                        val grupaJSON = mapToJSON(result.data!!)
                         val grupa  = result.toObject(Grupa::class.java)
                         grupy.add(grupa)
+                        Log.d("My-deb", grupaJSON.toString())
                     }
                     .addOnFailureListener { exception ->
                         Log.d(TAG, "Error getting documents: ", exception)
