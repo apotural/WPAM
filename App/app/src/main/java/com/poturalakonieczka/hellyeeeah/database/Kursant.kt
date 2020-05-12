@@ -5,7 +5,7 @@ import com.google.firebase.firestore.DocumentReference
 
 data class Kursant(
     val grupy: MutableList<DocumentReference?>,
-    val name: Name
+val name: Name
 ){
     constructor() : this(mutableListOf<DocumentReference?>() , Name())
 

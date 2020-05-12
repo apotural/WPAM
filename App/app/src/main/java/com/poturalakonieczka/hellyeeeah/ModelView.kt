@@ -7,8 +7,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.poturalakonieczka.hellyeeeah.database.Grupa
-import com.poturalakonieczka.hellyeeeah.database.Kursant
+import com.poturalakonieczka.hellyeeeah.database.*
 
 
 class ModelView : ViewModel() {
@@ -23,6 +22,11 @@ class ModelView : ViewModel() {
     private var _previousGroupReference: MutableList<DocumentReference?> =  mutableListOf()
     private var _mapListener: MutableMap<DocumentReference?, ListenerRegistration> = mutableMapOf()
     private var _mapGroupRef: MutableMap<DocumentReference?, Grupa?> = mutableMapOf()
+
+    private var _cancelledClasses: ZajeciaOdwolane? = null
+    private var _additionalClasses: ZajeciaDodatkowe? = null
+    private var _absentClasses: ZajeciaNieobecnosci? = null
+    private var _groupHistory: HistoriaGrup? = null
 
     private fun findGroupChange(){
         val added = _participant!!.grupy.toSet().minus(_previousGroupReference.toSet())
@@ -50,6 +54,7 @@ class ModelView : ViewModel() {
                     _previousGroupReference = _participant!!.grupy
                 }
             }
+            downloadClasses()
         }
     }
 
@@ -64,59 +69,88 @@ class ModelView : ViewModel() {
                 val group = snapshot.toObject(Grupa::class.java)
                 _groups.add(group)
                 _mapGroupRef[doc] = group
-
-                Log.d(_TAG, "display groups size" + _groups.size )
-                if(_groups.size == 1){
-                    Log.d(_TAG, "display groups" + _groups[0].toString() )
-                }
-                if(_groups.size == 2){
-                    Log.d(_TAG, "display groups 1" + _groups[0].toString() )
-                    Log.d(_TAG, "display groups 2" + _groups[1].toString() )
-
-                }
             }
         }
-        _mapListener[doc] = lisReg;
+        _mapListener[doc] = lisReg
     }
 
     private fun removeGroup(doc: DocumentReference?) {
         _mapListener[doc]?.remove()
-        _mapListener.remove(doc);
+        _mapListener.remove(doc)
         _groups.remove(_mapGroupRef[doc])
         _mapGroupRef.remove(doc)
     }
 
-//    private fun downloadGroups() {
-//        for (doc in _participant!!.grupy) {
-//            doc.addSnapshotListener { snapshot, e ->
-//                if (e != null) {
-//                    Log.w(_TAG, "Listen failed.", e)
-//                    return@addSnapshotListener
-//                }
-//
-//                if (snapshot != null && snapshot.exists()) {
-//                    Log.d(_TAG, "display groups" + _groups.size )
-//                    _groups.add(snapshot.toObject(Grupa::class.java))
-//                }
-//            }
-//        }
-//    }
+    private fun downloadCancelledClasses(){
+        val doc = _db.collection("Grupy").document("OdwolaneTerminy")
+        doc!!.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w(_TAG, "Listen failed.", e)
+                return@addSnapshotListener
+            }
 
-    private fun downloadGroupHistory(){
-
+            if (snapshot != null && snapshot.exists()) {
+                _cancelledClasses = snapshot.toObject(ZajeciaOdwolane::class.java)
+                Log.d(_TAG, "terminy odwolane " + _cancelledClasses.toString())
+            }
+        }
     }
 
-    private fun downloadCancelledClasses(){
+    private fun downloadGroupHistory(){
+        val doc = _user?.email?.let {
+            _db.collection("Kursanci/$it/zajecia").document("historiaGrup") }
 
+        doc!!.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w(_TAG, "Listen failed.", e)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                _groupHistory= snapshot.toObject(HistoriaGrup::class.java)
+                Log.d(_TAG, "historia grup " + _groupHistory.toString())
+            }
+        }
+    }
+
+    private fun downloadAbsentClasses(){
+        val doc = _user?.email?.let {
+            _db.collection("Kursanci/$it/zajecia").document("nieobecnosc") }
+
+        doc!!.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w(_TAG, "Listen failed.", e)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                _absentClasses= snapshot.toObject(ZajeciaNieobecnosci::class.java)
+                Log.d(_TAG, "zajecia z nieobecnoscia " + _absentClasses.toString())
+            }
+        }
     }
 
     private fun downloadAdditionalClasses(){
+        val doc = _user?.email?.let {
+            _db.collection("Kursanci/$it/zajecia").document("dodatkowe") }
 
+        doc!!.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w(_TAG, "Listen failed.", e)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                _additionalClasses = snapshot.toObject(ZajeciaDodatkowe::class.java)
+                Log.d(_TAG, "zajecia dodatkowe " + _additionalClasses.toString())
+            }
+        }
     }
 
     private fun downloadClasses(){
         downloadGroupHistory()
         downloadCancelledClasses()
+        downloadAbsentClasses()
         downloadAdditionalClasses()
     }
 
@@ -205,8 +239,8 @@ class ModelView : ViewModel() {
 //            user?.email?.let { db.collection("Kursanci").document(it) }
 //
 //            val docRef = user?.email?.let {
-//                db.collection("Kursanci/$it/zajecia").document("dodatkowe")
-//            }
+////                db.collection("Kursanci/$it/zajecia").document("dodatkowe")
+////            }
 //            docRef?.get()?.addOnSuccessListener { document ->
 //                    if (document != null) {
 //                        zajeciaDodatkowe = document.toObject(ZajeciaDodatkowe::class.java)
