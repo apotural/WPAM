@@ -1,17 +1,16 @@
 package com.poturalakonieczka.hellyeeeah
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.user_data_fragment.*
-import yalantis.com.sidemenu.interfaces.ScreenShotable
+import kotlinx.android.synthetic.main.user_calendar_fragment.*
+import java.util.*
 
 
 class CalendarFragment: Fragment(){
+    val calendar: Calendar = Calendar.getInstance()
     companion object {
         fun newInstance() = CalendarFragment()
     }
@@ -25,5 +24,11 @@ class CalendarFragment: Fragment(){
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        val oneMonthsAhead = Calendar.getInstance()
+        oneMonthsAhead.add(Calendar.MONTH, 1)
+
+        calendarView.minDate = Date().time - 1000L*60L*60L*24L*365L
+        calendarView.maxDate = Date().time + 1000L*60L*60L*24L*30L
     }
 }

@@ -15,8 +15,6 @@ class UserDataFragment : Fragment() {
         fun newInstance() = UserDataFragment()
     }
 
-    private lateinit var viewModel: ModelView
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View {
         return inflater.inflate(R.layout.user_data_fragment, container, false)
@@ -25,16 +23,17 @@ class UserDataFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(ModelView::class.java)
+
         Log.d("My-deb", "Create user data fragment")
 
-        if(   viewModel.getUser() != null){
-            var email = viewModel.getUser()!!.email
-            viewModel.downloadKursant()
-            textView2.text = email
-        }else{
-            textView2.text = "empty user"
-        }
+
+//        if(  UserActivity.viewModel.getUser() != null){
+//            var email = UserActivity.viewModel.getUser()!!.email
+//
+//            textView2.text = email
+//        }else{
+//            textView2.text = "empty user"
+//        }
 
         //val imie = viewModel.getUserName()
         //val kursant = viewModel.downloadKursant()

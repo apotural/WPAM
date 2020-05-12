@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity() {
     private val TAG = "FacebookAuth"
     private var fbAuth: FirebaseAuth? = null
 
-
     private fun exchangeAccessToken(token: AccessToken) {
         val credential = FacebookAuthProvider.getCredential(token.token)
         fbAuth!!.signInWithCredential(credential)
@@ -65,19 +64,6 @@ class MainActivity : AppCompatActivity() {
                 }
             })
 
-        fbAuth = FirebaseAuth.getInstance()
-
-        authListener = AuthStateListener { firebaseAuth ->
-            val user = firebaseAuth.currentUser
-            if (user != null) {
-                finish()
-                val intent = Intent(this@MainActivity, UserActivity::class.java)
-                startActivity(intent)
-            } else {
-
-
-            }
-        }
         fbAuth = FirebaseAuth.getInstance()
 
         authListener = AuthStateListener { firebaseAuth ->

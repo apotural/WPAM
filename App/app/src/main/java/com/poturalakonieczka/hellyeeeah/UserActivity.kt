@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.facebook.FacebookSdk
 import com.facebook.login.LoginManager
 import com.google.android.material.navigation.NavigationView
@@ -17,9 +18,15 @@ import kotlinx.android.synthetic.main.user_main.*
 class UserActivity : AppCompatActivity() {
     private var toggle: ActionBarDrawerToggle? = null
 
+    companion object {
+        lateinit var viewModel: ModelView
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = ViewModelProvider(this).get(ModelView::class.java)
+        viewModel.downloadParticipant()
+
         setContentView(R.layout.user_main)
 
         if (savedInstanceState == null) {

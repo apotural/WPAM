@@ -6,9 +6,10 @@ data class Grupa(
     val aktualna: Boolean,
     val dzien: String,
     val godzina: Timestamp,
+    val liczbaKurantek: Int,
     val poziom: Int,
     val rodzaj: String,
-    val terminy: MutableList<Timestamp?>
+    val terminy: MutableList<Termin?>
 ){
-    constructor() : this(false, "", Timestamp(0, 0), 0,"", mutableListOf<Timestamp?>())
+    constructor() : this(false, "", Timestamp(0, 0), 0,0,"", mutableListOf<Termin?>())
 }
