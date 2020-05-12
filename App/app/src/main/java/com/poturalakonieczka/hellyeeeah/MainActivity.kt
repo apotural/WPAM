@@ -24,17 +24,17 @@ class MainActivity : AppCompatActivity() {
     private fun exchangeAccessToken(token: AccessToken) {
         val credential = FacebookAuthProvider.getCredential(token.token)
         fbAuth!!.signInWithCredential(credential)
-            .addOnCompleteListener(this
-            ) { task ->
-                if (task.isSuccessful) {
-                    finish()
-                    Log.d("My-deb", "Zalogowanie sie")
-                    val intent = Intent(this@MainActivity, UserActivity::class.java)
-                    startActivity(intent)
-                }
-            }
-
+//            .addOnCompleteListener(this
+//            ) { task ->
+//                if (task.isSuccessful) {
+//                    finish()
+//                    Log.d("My-deb", "Zalogowanie sie")
+//                    val intent = Intent(this@MainActivity, UserActivity::class.java)
+//                    startActivity(intent)
+//                }
+//            }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         FacebookSdk.sdkInitialize(this)
 
@@ -44,7 +44,19 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         callbackManager = CallbackManager.Factory.create();
 
+        fbAuth = FirebaseAuth.getInstance()
 
+        authListener = AuthStateListener { firebaseAuth ->
+            val user = firebaseAuth.currentUser
+            if (user != null) {
+                finish()
+                val intent = Intent(this@MainActivity, UserActivity::class.java)
+                startActivity(intent)
+            } else {
+
+
+            }
+        }
 
         loginButton.setReadPermissions("email", "public_profile");
 
@@ -64,20 +76,6 @@ class MainActivity : AppCompatActivity() {
                 }
             })
 
-        fbAuth = FirebaseAuth.getInstance()
-
-        authListener = AuthStateListener { firebaseAuth ->
-            val user = firebaseAuth.currentUser
-            if (user != null) {
-                finish()
-                val intent = Intent(this@MainActivity, UserActivity::class.java)
-                startActivity(intent)
-            } else {
-
-
-            }
-        }
-        
 //        if (savedInstanceState == null) {
 //            supportFragmentManager.beginTransaction()
 //                .replace(R.id.container, FacebookLoginFragment.newInstance())

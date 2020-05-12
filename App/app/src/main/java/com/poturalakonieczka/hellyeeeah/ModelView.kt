@@ -64,6 +64,16 @@ class ModelView : ViewModel() {
                 val group = snapshot.toObject(Grupa::class.java)
                 _groups.add(group)
                 _mapGroupRef[doc] = group
+
+                Log.d(_TAG, "display groups size" + _groups.size )
+                if(_groups.size == 1){
+                    Log.d(_TAG, "display groups" + _groups[0].toString() )
+                }
+                if(_groups.size == 2){
+                    Log.d(_TAG, "display groups 1" + _groups[0].toString() )
+                    Log.d(_TAG, "display groups 2" + _groups[1].toString() )
+
+                }
             }
         }
         _mapListener[doc] = lisReg;
