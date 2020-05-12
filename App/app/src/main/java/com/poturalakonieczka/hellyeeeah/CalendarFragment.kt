@@ -25,6 +25,5 @@ class CalendarFragment: Fragment(){
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        textView2.text = "calendar"
     }
 }

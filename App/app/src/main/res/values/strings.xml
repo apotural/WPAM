@@ -4,8 +4,9 @@
     <string name="studio_name">Hell Yeeeah \nPole Dance Studio</string>
     <string name="fb_login_protocol_scheme">fb642513126599380</string>
 
-    <string name="drawer_open">Open</string>
-    <string name="drawer_close">Close</string>
+    <string name="calendar_title">Twój grafik</string>
+
     <string name="Open">open</string>
     <string name="Close">close</string>
+
 </resources>
