@@ -20,11 +20,13 @@ class UserActivity : AppCompatActivity() {
 
     companion object {
         lateinit var viewModel: ModelView
+        lateinit var storageView: StorageView
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(ModelView::class.java)
+        storageView = ViewModelProvider(this).get(StorageView::class.java)
         viewModel.downloadParticipant()
 
         setContentView(R.layout.user_main)

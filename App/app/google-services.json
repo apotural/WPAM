@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "21048278568-4rvup51ok3iiirdptupvug7bkhe7kej5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.poturalakonieczka.hellyeeeah",
+            "certificate_hash": "5578f5720691721d144659a09a663e7b5856d92b"
+          }
+        },
+        {
           "client_id": "21048278568-ep7lbkp75qqjt28if308q0c7i4uifm58.apps.googleusercontent.com",
           "client_type": 3
         }

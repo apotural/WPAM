@@ -29,38 +29,26 @@ class ClassFragment : Fragment(){
         return inflater.inflate(R.layout.user_classes_fragment, container, false)
     }
 
+    @ExperimentalStdlibApi
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        zajecia.add(Timestamp(5000, 0))
+        zajecia.add(Timestamp(500000, 0))
 
-        zajecia.add(Timestamp(Date(5000))) //temporary code to see if list works
-        zajecia.add(Timestamp(Date(500000)))
 
         classesAdapters = ClassesAdapters(activity!!.applicationContext , zajecia);
         list.adapter = classesAdapters
         list.onItemClickListener = OnItemClickListener { listView, _, itemPosition, _ ->
 
             var timestamp: Timestamp? = listView.getItemAtPosition(itemPosition) as Timestamp?
-            activity!!.supportFragmentManager.beginTransaction().replace(
-                R.id.container, ClassResourcesFragment.newInstance()
-            ).addToBackStack("classList").commit()
+            if(timestamp != null){
+                UserActivity.storageView.getFiles(timestamp!!.seconds.toString())
+                activity!!.supportFragmentManager.beginTransaction().replace(
+                    R.id.container, ClassResourcesFragment.newInstance()
+                ).addToBackStack("classList").commit()
+            }
         }
 
     }
 }
-//        classesAdapters = ClassesAdapters(activity!!.applicationContext, zajecia)
-//        list.adapter = classesAdapters
-//        list.onItemClickListener = OnItemClickListener { listView, _, itemPosition, _ ->
-//
-//            var timestamp: Timestamp? = listView.getItemAtPosition(itemPosition) as Timestamp?
-////            activity!!.supportFragmentManager.beginTransaction().replace(
-////                R.id.container, ClassResourcesFragment.newInstance()
-////            ).commit()
-//        }
-  //  }
 
-
-
-        //textView2.text = "class"
-
-//}
-//}
