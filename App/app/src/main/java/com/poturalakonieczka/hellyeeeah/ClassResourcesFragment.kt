@@ -2,6 +2,7 @@ package com.poturalakonieczka.hellyeeeah
 
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,7 +19,7 @@ import java.util.*
 class ClassResourcesFragment : Fragment(){
 
     companion object {
-        fun newInstance() = ClassFragment()
+        fun newInstance() = ClassResourcesFragment()
     }
 
     private lateinit var viewModel: ModelView
@@ -31,18 +32,10 @@ class ClassResourcesFragment : Fragment(){
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        Log.d("My-deb", "OPEN")
     }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
-        // This callback will only be called when MyFragment is at least Started.
-        /*val callback = requireActivity().onBackPressedDispatcher.addCallback(this){
-            activity!!.supportFragmentManager.beginTransaction().replace(
-                R.id.container, ClassFragment.newInstance()).commit()
 
-        }*/
-        // The callback can be enabled or disabled here or in the lambda
-    }
 
 
 }
