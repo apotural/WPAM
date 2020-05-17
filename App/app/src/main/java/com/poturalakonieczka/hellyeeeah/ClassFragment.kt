@@ -10,6 +10,7 @@ import com.google.firebase.Timestamp
 import com.poturalakonieczka.hellyeeeah.layoutClasses.ClassesAdapter
 import com.poturalakonieczka.hellyeeeah.layoutClasses.ResourcesAdapter
 import kotlinx.android.synthetic.main.user_classes_fragment.*
+import java.util.*
 
 
 class ClassFragment : Fragment(){
@@ -30,8 +31,8 @@ class ClassFragment : Fragment(){
     @ExperimentalStdlibApi
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        zajecia.add(Timestamp(5000, 0))
-        zajecia.add(Timestamp(500000, 0))
+        zajecia.add(Timestamp(Date(5000))) //argumentem sa milisekundt
+        zajecia.add(Timestamp(Date(500000)))
 
 
         classesAdapter = ClassesAdapter(activity!!.applicationContext , zajecia);
@@ -41,7 +42,7 @@ class ClassFragment : Fragment(){
             var timestamp: Timestamp? = listView.getItemAtPosition(itemPosition) as Timestamp?
             if(timestamp != null){
                 //UserActivity.storageView.setSelectedClassesTime(timestamp!!.seconds.toString())
-                UserActivity.storageView.getFiles(timestamp!!.seconds.toString())
+                UserActivity.storageView.getFiles(timestamp!!.toDate().time.toString())
                 activity!!.supportFragmentManager.beginTransaction().replace(
                     R.id.container, ClassResourcesFragment.newInstance()
                 ).addToBackStack("classList").commit()
