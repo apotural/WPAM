@@ -19,4 +19,13 @@ class StorageItem() {
     fun setUri(ur : Uri){
         uri = ur
     }
+    fun getMetadata(): StorageMetadata?{
+        return metadata
+    }
+    fun getText(): String?{
+        return text
+    }
+    fun getUri():Uri?{
+        return uri
+    }
 }

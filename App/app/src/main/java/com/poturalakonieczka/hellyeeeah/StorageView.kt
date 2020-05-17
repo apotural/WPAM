@@ -10,19 +10,20 @@ import com.poturalakonieczka.hellyeeeah.storage.StorageItem
 class StorageView : ViewModel() {
     private val _MAX_SIZE: Long = 1024 * 1024
     private var _mapItems : MutableMap<String, MutableList<StorageItem?>> = mutableMapOf()
-    //private var _items : MutableList<StorageItem?> = mutableListOf()
-
-    //private var storage = Firebase.storage
+    private var _currentTimestamp :String =""
     private var mStorageRef = FirebaseStorage.getInstance().getReference()
     private val _TAG: String = "My-log storageView"
+    private lateinit var _currentFragment: ClassResourcesFragment
 
     @ExperimentalStdlibApi
     fun getFiles(pathToFolder : String){
+        _currentTimestamp = pathToFolder
         Log.d(_TAG, "Start ") //just in case needed
         if(_mapItems.contains(pathToFolder)){ //w zalozeniu ze jak cos sie doda to nas powiadomi i zawola sie inna funkcje
             return
         }
         var list : MutableList<StorageItem?> = mutableListOf()
+        _mapItems[pathToFolder] = list
         val listRef = mStorageRef.child(pathToFolder)
         listRef.listAll()
             .addOnSuccessListener { listResult ->
@@ -30,15 +31,16 @@ class StorageView : ViewModel() {
                     Log.d(_TAG, "pref") //just in case needed
                 }
                 listResult.items.forEach { item ->
-                    var storItem = getStorageItem(item)
-                    list.add(storItem)
+                    var storageItem = getStorageItem(item)
+                    list.add(storageItem)
 
                 }
             }
             .addOnFailureListener {
                 Log.d(_TAG, "fail " + it.toString())
             }
-        _mapItems.put(pathToFolder, list)
+
+
     }
 
     @ExperimentalStdlibApi
@@ -46,11 +48,14 @@ class StorageView : ViewModel() {
         var storageItem = StorageItem()
         item.metadata.addOnSuccessListener { sM ->
             storageItem.setMetadata(sM)
-            if(sM.contentType!!.contains("text")){
+            if(sM.contentType!!.contains("text/")){
                 item.getBytes(_MAX_SIZE).addOnSuccessListener {
                     var text = it!!.decodeToString()
                     Log.d(_TAG, "we downloaded! dec "+text)
                     storageItem.setText(text)
+                    if(_currentFragment != null){
+                        _currentFragment.refreshContent()
+                    }
                 }.addOnFailureListener{
                     Log.d(_TAG, "fail to download")
                 }
@@ -58,6 +63,9 @@ class StorageView : ViewModel() {
                 item.downloadUrl.addOnSuccessListener {
                     Log.d(_TAG, "we downloaded!")
                     storageItem.setUri(it)
+                    if(_currentFragment != null){
+                        _currentFragment.refreshContent()
+                    }
                 }.addOnFailureListener{
                     Log.d(_TAG, "fail to download")
                 }
@@ -66,6 +74,16 @@ class StorageView : ViewModel() {
             Log.d(_TAG, "fail to get Metadata")
         }
         return storageItem
+    }
+
+    fun getCurrentList():MutableList<StorageItem?>{
+        return _mapItems[_currentTimestamp]!!
+    }
+    fun getLastSelectedClassTime():String{
+        return _currentTimestamp
+    }
+    fun setCurrentFragment(fragment:ClassResourcesFragment){
+        _currentFragment = fragment
     }
 
 }

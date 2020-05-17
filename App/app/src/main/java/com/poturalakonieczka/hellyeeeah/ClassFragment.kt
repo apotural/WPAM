@@ -5,16 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView.OnItemClickListener
-import android.widget.BaseAdapter
 import androidx.fragment.app.Fragment
 import com.google.firebase.Timestamp
-import com.poturalakonieczka.hellyeeeah.layoutClasses.ClassesAdapters
+import com.poturalakonieczka.hellyeeeah.layoutClasses.ClassesAdapter
+import com.poturalakonieczka.hellyeeeah.layoutClasses.ResourcesAdapter
 import kotlinx.android.synthetic.main.user_classes_fragment.*
-import java.util.*
 
 
 class ClassFragment : Fragment(){
-    private var classesAdapters: ClassesAdapters? = null
+    private var classesAdapter: ClassesAdapter? = null
     private var zajecia: MutableList<Timestamp?> = mutableListOf()
     private val _TAG: String = "My-log ClassFragment"
 
@@ -22,7 +21,6 @@ class ClassFragment : Fragment(){
         fun newInstance() = ClassFragment()
     }
 
-    private lateinit var viewModel: ModelView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -36,12 +34,13 @@ class ClassFragment : Fragment(){
         zajecia.add(Timestamp(500000, 0))
 
 
-        classesAdapters = ClassesAdapters(activity!!.applicationContext , zajecia);
-        list.adapter = classesAdapters
+        classesAdapter = ClassesAdapter(activity!!.applicationContext , zajecia);
+        list.adapter = classesAdapter
         list.onItemClickListener = OnItemClickListener { listView, _, itemPosition, _ ->
 
             var timestamp: Timestamp? = listView.getItemAtPosition(itemPosition) as Timestamp?
             if(timestamp != null){
+                //UserActivity.storageView.setSelectedClassesTime(timestamp!!.seconds.toString())
                 UserActivity.storageView.getFiles(timestamp!!.seconds.toString())
                 activity!!.supportFragmentManager.beginTransaction().replace(
                     R.id.container, ClassResourcesFragment.newInstance()

@@ -1,6 +1,5 @@
 package com.poturalakonieczka.hellyeeeah.layoutClasses
 
-import android.content.ClipData.Item
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,7 @@ import android.widget.TextView
 import com.google.firebase.Timestamp
 import com.poturalakonieczka.hellyeeeah.R
 
-class ClassesAdapters(var context: Context,  var arrayList: MutableList<Timestamp?> ): BaseAdapter() {
+class ClassesAdapter(var context: Context, var mutableList: MutableList<Timestamp?> ): BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         var convertView = convertView
@@ -19,11 +18,11 @@ class ClassesAdapters(var context: Context,  var arrayList: MutableList<Timestam
             convertView = inflater.inflate(R.layout.card_view_classes, null)
         }
         var date: TextView = convertView!!.findViewById(R.id.dateClasses)
-        date.text = arrayList[position].toString()
+        date.text = mutableList[position].toString()
         return convertView
     }
     override fun getItem(position: Int): Timestamp? {
-        return arrayList[position]
+        return mutableList[position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -31,6 +30,6 @@ class ClassesAdapters(var context: Context,  var arrayList: MutableList<Timestam
     }
 
     override fun getCount(): Int {
-        return arrayList.size
+        return mutableList.size
     }
 }
