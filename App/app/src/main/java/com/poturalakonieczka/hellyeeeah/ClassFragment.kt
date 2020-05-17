@@ -39,7 +39,7 @@ class ClassFragment : Fragment(){
         list.adapter = classesAdapter
         list.onItemClickListener = OnItemClickListener { listView, _, itemPosition, _ ->
 
-            var timestamp: Timestamp? = listView.getItemAtPosition(itemPosition) as Timestamp?
+            val timestamp: Timestamp? = listView.getItemAtPosition(itemPosition) as Timestamp?
             if(timestamp != null){
                 //UserActivity.storageView.setSelectedClassesTime(timestamp!!.seconds.toString())
                 UserActivity.storageView.getFiles(timestamp!!.toDate().time.toString())

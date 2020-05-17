@@ -1,11 +1,14 @@
 package com.poturalakonieczka.hellyeeeah
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.google.zxing.common.BitArray
 import com.poturalakonieczka.hellyeeeah.storage.StorageItem
+
+
 
 class StorageView : ViewModel() {
     private val _MAX_SIZE: Long = 1024 * 1024
@@ -13,7 +16,8 @@ class StorageView : ViewModel() {
     private var _currentTimestamp :String =""
     private var mStorageRef = FirebaseStorage.getInstance().getReference()
     private val _TAG: String = "My-log storageView"
-    private lateinit var _currentFragment: ClassResourcesFragment
+    var needToRefresh : MutableLiveData<Boolean> = MutableLiveData(false)
+
 
     @ExperimentalStdlibApi
     fun getFiles(pathToFolder : String){
@@ -53,9 +57,7 @@ class StorageView : ViewModel() {
                     var text = it!!.decodeToString()
                     Log.d(_TAG, "we downloaded! dec "+text)
                     storageItem.setText(text)
-                    if(_currentFragment != null){
-                        _currentFragment.refreshContent()
-                    }
+                    needToRefresh.value = true
                 }.addOnFailureListener{
                     Log.d(_TAG, "fail to download")
                 }
@@ -63,9 +65,7 @@ class StorageView : ViewModel() {
                 item.downloadUrl.addOnSuccessListener {
                     Log.d(_TAG, "we downloaded!")
                     storageItem.setUri(it)
-                    if(_currentFragment != null){
-                        _currentFragment.refreshContent()
-                    }
+                    needToRefresh.value = true
                 }.addOnFailureListener{
                     Log.d(_TAG, "fail to download")
                 }
@@ -82,8 +82,6 @@ class StorageView : ViewModel() {
     fun getLastSelectedClassTime():String{
         return _currentTimestamp
     }
-    fun setCurrentFragment(fragment:ClassResourcesFragment){
-        _currentFragment = fragment
-    }
+
 
 }

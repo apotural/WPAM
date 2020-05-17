@@ -25,37 +25,37 @@ class ResourcesAdapter(var context: Context, var mutableList: MutableList<Storag
             convertView = inflater.inflate(R.layout.card_view_resources, null)
         }
         Log.d(_TAG, "Starting conversion")
-        var item = mutableList[position]
+        val item = mutableList[position]
         if (item != null){
-            var metadata = item!!.getMetadata()
+            val metadata = item.getMetadata()
             if (metadata != null){
                 val type = metadata.contentType
                 when {
                     type!!.contains("text/") -> {
-                        var comment: TextView = convertView!!.findViewById(R.id.comment)
+                        val comment: TextView = convertView!!.findViewById(R.id.comment)
                         comment.text = item.getText()
                     }
-                    type!!.contains("image/") -> {
-                        var image: ImageView = convertView!!.findViewById(R.id.image_resource)
+                    type.contains("image/") -> {
+                        val image: ImageView = convertView!!.findViewById(R.id.image_resource)
                         image.setImageURI(item.getUri())
                         Picasso.get().load(item.getUri()).into(image)
                     }
-                    type!!.contains("video/") -> {
-                        var video : VideoView = convertView!!.findViewById(R.id.video_resource)
+                    type.contains("video/") -> {
+                        val video : VideoView = convertView!!.findViewById(R.id.video_resource)
                         video.setVideoURI(item.getUri())
                         video.start() //to delete, just checking
                         Log.d(_TAG, "Video start")
                     }
                 }
-                var userName = metadata.getCustomMetadata("userName")
+                val userName = metadata.getCustomMetadata("userName")
                 if (userName != null){
-                    var userNameText :TextView = convertView!!.findViewById(R.id.resource_adder)
+                    val userNameText :TextView = convertView!!.findViewById(R.id.resource_adder)
                     userNameText.text = userName
                 }
 
-                var dateFormat = SimpleDateFormat("MM-dd-yyyy HH:mm:ss")
-                var date = Date(metadata!!.creationTimeMillis)
-                var timeOfElement :TextView = convertView!!.findViewById(R.id.time_of_element)
+                val dateFormat = SimpleDateFormat("MM-dd-yyyy HH:mm:ss")
+                val date = Date(metadata!!.creationTimeMillis)
+                val timeOfElement :TextView = convertView!!.findViewById(R.id.time_of_element)
                 timeOfElement.text = dateFormat.format(date)
 
             }

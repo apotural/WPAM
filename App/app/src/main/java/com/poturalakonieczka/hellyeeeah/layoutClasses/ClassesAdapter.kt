@@ -10,7 +10,6 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import com.google.firebase.Timestamp
 import com.poturalakonieczka.hellyeeeah.R
-import java.util.*
 
 class ClassesAdapter(var context: Context, var mutableList: MutableList<Timestamp?> ): BaseAdapter() {
 
