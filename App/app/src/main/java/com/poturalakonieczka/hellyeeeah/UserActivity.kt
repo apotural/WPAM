@@ -29,8 +29,7 @@ class UserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(ModelView::class.java)
         viewModel.setDateFilters()
-        viewModel.downloadGroups()
-        viewModel.downloadParticipant()
+        viewModel.downloadGroups() // participant is download after group
 
         setContentView(R.layout.user_main)
 
