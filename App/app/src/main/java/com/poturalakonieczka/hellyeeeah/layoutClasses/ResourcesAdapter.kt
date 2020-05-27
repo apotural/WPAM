@@ -2,19 +2,17 @@ package com.poturalakonieczka.hellyeeeah.layoutClasses
 
 import android.content.Context
 import android.icu.text.SimpleDateFormat
+import android.media.MediaPlayer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.VideoView
-
+import android.widget.*
 import com.poturalakonieczka.hellyeeeah.R
 import com.poturalakonieczka.hellyeeeah.storage.StorageItem
 import com.squareup.picasso.Picasso
 import java.util.*
+
 
 class ResourcesAdapter(var context: Context, var mutableList: MutableList<StorageItem?> ): BaseAdapter() {
     val _TAG :String = "My-log ResourcesAdapter"
@@ -41,9 +39,23 @@ class ResourcesAdapter(var context: Context, var mutableList: MutableList<Storag
                         Picasso.get().load(item.getUri()).into(image)
                     }
                     type.contains("video/") -> {
-                        val video : VideoView = convertView!!.findViewById(R.id.video_resource)
+                        var video : VideoView = convertView!!.findViewById(R.id.video_resource)
+
                         video.setVideoURI(item.getUri())
-                        video.start() //to delete, just checking
+                        video.setOnPreparedListener {
+                            Log.d(_TAG, "Video Prepared")
+                            //val mediaController = MediaController(context.applicationContext)
+
+                            //mediaController.setAnchorView(video)
+                            //video.setMediaController(mediaController)
+                            //video.start() //to delete, just checking
+                            if(it!= null){
+                                Log.d(_TAG, "Video height "+ it!!.videoHeight+ " and width "+it!!.videoWidth)
+                            }
+                        }
+                        video.setOnErrorListener(MediaPlayer.OnErrorListener { mediaPlayer, i, i1 ->
+                            Log.d(_TAG, "Error")
+                            false })
                         Log.d(_TAG, "Video start")
                     }
                 }

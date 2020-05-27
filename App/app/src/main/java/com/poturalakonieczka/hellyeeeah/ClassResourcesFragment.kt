@@ -45,9 +45,18 @@ class ClassResourcesFragment : Fragment(){
         UserActivity.storageView.needToRefresh.observe(activity!!, Observer { newValue: Boolean ->
             Log.d(_TAG, "refresh $newValue")
             refreshContent()
-        }
+        })
+        fab_add.setOnClickListener {
+            comment_pole.visibility = View.VISIBLE
+            lay_buttons.visibility = View.VISIBLE
+            fab_add.visibility = View.GONE
 
-        )
+        }
+        button_back.setOnClickListener {
+            comment_pole.visibility = View.GONE
+            lay_buttons.visibility = View.GONE
+            fab_add.visibility = View.VISIBLE
+        }
 
     }
 

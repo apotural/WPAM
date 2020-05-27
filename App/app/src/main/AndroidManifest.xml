@@ -22,7 +22,9 @@
         </activity>
 
         <activity
-            android:name=".UserActivity">
+            android:name=".UserActivity"
+            android:windowSoftInputMode="adjustResize">
+
             <intent-filter>
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

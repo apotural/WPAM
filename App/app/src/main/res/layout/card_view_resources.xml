@@ -21,6 +21,7 @@
                 android:layout_width = "match_parent"
                 android:layout_height = "wrap_content"
                 android:layout_gravity="center"
+                android:gravity="center"
                 android:id="@+id/classes_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.39"
@@ -33,6 +34,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:gravity="left"
                     android:autoLink="web"
                     android:layout_margin="5dp"
                     />
