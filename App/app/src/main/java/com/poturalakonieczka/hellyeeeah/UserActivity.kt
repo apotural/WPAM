@@ -28,6 +28,7 @@ class UserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(ModelView::class.java)
+        storageView = ViewModelProvider(this).get(StorageView::class.java)
         viewModel.setDateFilters()
         viewModel.downloadGroups() // participant is download after group
 
