@@ -1,10 +1,11 @@
 package com.poturalakonieczka.hellyeeeah.database
 
 import com.google.firebase.Timestamp
+import java.util.*
 
 
 data class ZajeciaOdwolane(
-    val listaTerminow: MutableList<Timestamp?>
-){
+    var listaTerminow: MutableList<Timestamp?>
+): Observable(){
     constructor() : this(mutableListOf<Timestamp?>() )
 }

@@ -25,7 +25,8 @@ class UserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(ModelView::class.java)
-        viewModel.downloadParticipant()
+        viewModel.setDateFilters()
+        viewModel.downloadGroups()
 
         setContentView(R.layout.user_main)
 

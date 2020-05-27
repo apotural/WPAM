@@ -9,7 +9,8 @@ data class Grupa(
     val liczbaKurantek: Int,
     val poziom: Int,
     val rodzaj: String,
+    val prowadzaca: String,
     val terminy: MutableList<Termin?>
 ){
-    constructor() : this(false, "", Timestamp(0, 0), 0,0,"", mutableListOf<Termin?>())
+    constructor() : this(false, "", Timestamp(0, 0), 0,0,"", "", mutableListOf<Termin?>())
 }
