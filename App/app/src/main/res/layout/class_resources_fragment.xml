@@ -46,7 +46,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toStartOf="@+id/lay_buttons"
+                android:layout_toStartOf="@+id/lay_thumb"
                 android:layout_margin="7dp"
                 android:gravity="bottom"
                 >
@@ -69,6 +69,34 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
+            <RelativeLayout
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/lay_thumb"
+                android:layout_toStartOf="@+id/lay_buttons"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:id="@+id/thumb_photo"/>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_transparent"
+                    android:src="@drawable/ic_cancel"
+                    android:id="@+id/but_cancel_photo"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    />
+
+
+            </RelativeLayout>
 
 
             <RelativeLayout
@@ -77,7 +105,8 @@
                 android:id="@+id/lay_buttons"
                 android:visibility="gone"
                 android:orientation="horizontal"
-                android:layout_alignParentEnd="true">
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true">
                 <ImageButton
                     android:id="@+id/button_back"
                     android:layout_width="wrap_content"
