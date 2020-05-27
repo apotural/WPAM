@@ -1,28 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/calendarTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:id="@+id/class_date_text"
+            android:gravity="center"
+            android:textSize="15dp"
             android:fontFamily="@font/aleo"
-            android:text="Twoje zajecia"
-            android:textSize="45sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.37" />
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/lay_list"
+            android:layout_above="@+id/lay_comment">
+            <ListView
+                android:id="@+id/listResources"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="30dp"
+                android:divider="@null"
+                android:dividerHeight="0dp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lay_comment"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toStartOf="@+id/lay_thumb"
+                android:layout_margin="7dp"
+                android:gravity="bottom"
+                >
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/comment_pole"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Dodaj komentarz"
+                    android:visibility="gone"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="300"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/text_comment"
+                        android:layout_width="match_parent"
+                        android:textSize="12dp"
+                        android:layout_height="match_parent"
+                        android:maxLines="5"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+            <RelativeLayout
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/lay_thumb"
+                android:layout_toStartOf="@+id/lay_buttons"
+                android:layout_centerVertical="true"
+                android:visibility="gone"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:id="@+id/thumb_photo"/>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_transparent"
+                    android:src="@drawable/ic_cancel"
+                    android:id="@+id/but_cancel_photo"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    />
+
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/lay_buttons"
+                android:visibility="gone"
+                android:orientation="horizontal"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true">
+                <ImageButton
+                    android:id="@+id/button_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_transparent"
+                    android:src="@drawable/ic_back_arrow"
+                    android:layout_alignParentEnd="true"
+                    />
+                <ImageButton
+                    android:id="@+id/button_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_transparent"
+                    android:src="@drawable/ic_add_photo"
+                    android:layout_below="@id/button_back"
+                    android:layout_alignParentRight="true"/>
+                <ImageButton
+                    android:id="@+id/button_send"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_transparent"
+                    android:src="@drawable/ic_send"
+                    android:layout_below="@id/button_photo"
+                    android:layout_alignParentRight="true"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
 
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/ic_add"
+        app:fabSize="mini"
+        android:layout_margin="16dp" />
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 

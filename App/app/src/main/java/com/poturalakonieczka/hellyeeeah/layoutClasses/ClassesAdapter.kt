@@ -1,7 +1,8 @@
 package com.poturalakonieczka.hellyeeeah.layoutClasses
 
-import android.content.ClipData.Item
 import android.content.Context
+import android.icu.text.SimpleDateFormat
+import android.icu.util.ULocale
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,7 @@ import android.widget.TextView
 import com.google.firebase.Timestamp
 import com.poturalakonieczka.hellyeeeah.R
 
-class ClassesAdapters(var context: Context,  var arrayList: MutableList<Timestamp?> ): BaseAdapter() {
+class ClassesAdapter(var context: Context, var mutableList: MutableList<Timestamp?> ): BaseAdapter() {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         var convertView = convertView
@@ -18,12 +19,14 @@ class ClassesAdapters(var context: Context,  var arrayList: MutableList<Timestam
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = inflater.inflate(R.layout.card_view_classes, null)
         }
-        var date: TextView = convertView!!.findViewById(R.id.dateClasses)
-        date.text = arrayList[position].toString()
+        var textView: TextView = convertView!!.findViewById(R.id.dateClasses)
+        var dateFormat = SimpleDateFormat("EEE, MM-dd-yyyy HH:mm", ULocale.getDefault())
+        var date = mutableList[position]!!.toDate()
+        textView.text = dateFormat.format(date)
         return convertView
     }
     override fun getItem(position: Int): Timestamp? {
-        return arrayList[position]
+        return mutableList[position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -31,6 +34,6 @@ class ClassesAdapters(var context: Context,  var arrayList: MutableList<Timestam
     }
 
     override fun getCount(): Int {
-        return arrayList.size
+        return mutableList.size
     }
 }

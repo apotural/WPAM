@@ -1,6 +1,7 @@
 package com.poturalakonieczka.hellyeeeah
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -17,9 +18,11 @@ import kotlinx.android.synthetic.main.user_main.*
 
 class UserActivity : AppCompatActivity() {
     private var toggle: ActionBarDrawerToggle? = null
+    val _TAG = "My-log UserActivity"
 
     companion object {
         lateinit var viewModel: ModelView
+        lateinit var storageView: StorageView
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,6 +30,7 @@ class UserActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(ModelView::class.java)
         viewModel.setDateFilters()
         viewModel.downloadGroups()
+        viewModel.downloadParticipant()
 
         setContentView(R.layout.user_main)
 
@@ -90,6 +94,20 @@ class UserActivity : AppCompatActivity() {
             }
             .setNegativeButton( "Nie", null)
             .show()
+    }
+
+    override fun onRequestPermissionsResult( requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        Log.d(_TAG, "requesting $requestCode")
+        //super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode){
+            ClassResourcesFragment.IMAGE_PICK_CODE -> {
+                if(grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Log.d(_TAG, "allowed we can access photos! ")
+                    // to do!!!! call pickImageFromGallery !!!
+                    //pickImageFromGallery()
+                }
+            }
+        }
     }
 
 }
