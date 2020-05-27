@@ -2,7 +2,6 @@ package com.poturalakonieczka.hellyeeeah
 
 import android.content.Intent
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.storage.FirebaseStorage
@@ -18,9 +17,9 @@ class StorageView : ViewModel() {
     private var mStorageRef = FirebaseStorage.getInstance().getReference()
     private val _TAG: String = "My-log storageView"
     var needToRefresh : MutableLiveData<Boolean> = MutableLiveData(false)
-    private var isImageSet : Boolean = false
-    private var isCommenting : Boolean = false
-    private var imageToAdd : Intent? = null
+    private var _isImageSet : Boolean = false
+    private var _isCommenting : Boolean = false
+    private var _imageToAdd : Intent? = null
 
 
     @ExperimentalStdlibApi
@@ -88,27 +87,27 @@ class StorageView : ViewModel() {
     }
 
     fun getIsImageSet():Boolean{
-        return isImageSet
+        return _isImageSet
     }
 
     fun setIsImageSet(v : Boolean){
-        isImageSet = v
+        _isImageSet = v
     }
 
     fun getIsCommenting():Boolean{
-        return isCommenting
+        return _isCommenting
     }
 
     fun setIsCommenting(v : Boolean){
-        isCommenting = v
+        _isCommenting = v
     }
 
     fun setImageToAdd(data:Intent?){
-        imageToAdd = data
+        _imageToAdd = data
     }
 
     fun getImageToAdd():Intent?{
-        return imageToAdd
+        return _imageToAdd
     }
 
     fun sendMessage(){
