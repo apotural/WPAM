@@ -22,33 +22,34 @@ class ResourcesAdapter(var context: Context, var mutableList: MutableList<Storag
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = inflater.inflate(R.layout.card_view_resources, null)
         }
-        Log.d(_TAG, "Starting conversion")
         val item = mutableList[position]
         if (item != null){
             val metadata = item.getMetadata()
             if (metadata != null){
                 val type = metadata.contentType
+                val comment: TextView = convertView!!.findViewById(R.id.comment)
+                val image: ImageView = convertView!!.findViewById(R.id.image_resource)
+                var video : VideoView = convertView!!.findViewById(R.id.video_resource)
+                val userNameText :TextView = convertView!!.findViewById(R.id.resource_adder)
+                val timeOfElement :TextView = convertView!!.findViewById(R.id.time_of_element)
+                //need to clear all of the elements as there was a problem when the list changed and different type of content was in the same view
+                comment.text = ""
+                image.setImageResource(0)
+                //video
+                userNameText.text = ""
+                timeOfElement.text = ""
                 when {
                     type!!.contains("text/") -> {
-                        val comment: TextView = convertView!!.findViewById(R.id.comment)
                         comment.text = item.getText()
                     }
                     type.contains("image/") -> {
-                        val image: ImageView = convertView!!.findViewById(R.id.image_resource)
-                        image.setImageURI(item.getUri())
-                        Picasso.get().load(item.getUri()).into(image)
+                        //image.setImageURI(item.getUri())
+                        Picasso.get().load(item.getUri()).fit().centerInside().into(image)
                     }
                     type.contains("video/") -> {
-                        var video : VideoView = convertView!!.findViewById(R.id.video_resource)
-
                         video.setVideoURI(item.getUri())
                         video.setOnPreparedListener {
                             Log.d(_TAG, "Video Prepared")
-                            //val mediaController = MediaController(context.applicationContext)
-
-                            //mediaController.setAnchorView(video)
-                            //video.setMediaController(mediaController)
-                            //video.start() //to delete, just checking
                             if(it!= null){
                                 Log.d(_TAG, "Video height "+ it!!.videoHeight+ " and width "+it!!.videoWidth)
                             }
@@ -61,13 +62,10 @@ class ResourcesAdapter(var context: Context, var mutableList: MutableList<Storag
                 }
                 val userName = metadata.getCustomMetadata("userName")
                 if (userName != null){
-                    val userNameText :TextView = convertView!!.findViewById(R.id.resource_adder)
                     userNameText.text = userName
                 }
-
                 val dateFormat = SimpleDateFormat("MM-dd-yyyy HH:mm:ss")
                 val date = Date(metadata!!.creationTimeMillis)
-                val timeOfElement :TextView = convertView!!.findViewById(R.id.time_of_element)
                 timeOfElement.text = dateFormat.format(date)
 
             }

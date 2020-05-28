@@ -36,6 +36,7 @@ class ClassResourcesFragment : Fragment(){
 
     }
 
+    @ExperimentalStdlibApi
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Log.d(_TAG, "Create Activity")
@@ -46,7 +47,7 @@ class ClassResourcesFragment : Fragment(){
         val mutableList:MutableList<StorageItem?> = UserActivity.storageView.getCurrentList()
         resourcesAdapter = ResourcesAdapter(activity!!.applicationContext, mutableList)
         //mutableList.
-        listResources.adapter = resourcesAdapter
+        list_resources.adapter = resourcesAdapter
         UserActivity.storageView.needToRefresh.observe(activity!!, Observer { newValue: Boolean ->
             Log.d(_TAG, "refresh $newValue")
             refreshContent()
@@ -60,7 +61,7 @@ class ClassResourcesFragment : Fragment(){
             setStateComment(false)
         }
         button_send.setOnClickListener {
-            UserActivity.storageView.sendMessage()
+            UserActivity.storageView.sendMessage(text_comment.text.toString())
             clearComment()
         }
         button_photo.setOnClickListener {

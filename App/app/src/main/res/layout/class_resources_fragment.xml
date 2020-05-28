@@ -24,7 +24,7 @@
             android:id="@+id/lay_list"
             android:layout_above="@+id/lay_comment">
             <ListView
-                android:id="@+id/listResources"
+                android:id="@+id/list_resources"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="30dp"

@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storageMetadata
 import com.poturalakonieczka.hellyeeeah.storage.StorageItem
 
 
@@ -110,7 +111,48 @@ class StorageView : ViewModel() {
         return _imageToAdd
     }
 
-    fun sendMessage(){
+    @ExperimentalStdlibApi
+    fun sendMessage(comment: String){
+        val userName = UserActivity.viewModel.getParticipantName()
+        val tsLong = System.currentTimeMillis() / 1000
+        val fileName = userName.replace(" ", "")+tsLong.toString()
+        Log.d(_TAG, fileName)
+
+        if(!comment.isBlank()){
+            val fNameT = fileName+".txt"
+            val data = comment.toByteArray()
+            var metadata = storageMetadata {
+                contentType = "text/plain"
+                setCustomMetadata("userName", userName)
+            }
+            val ref = mStorageRef.child(_currentTimestamp+"/"+fNameT)
+            var uploadTask = ref.putBytes(data, metadata)
+            uploadTask.addOnSuccessListener {
+                Log.d(_TAG, "file uploaded!")
+                _mapItems[_currentTimestamp]!!.add(getStorageItem(ref))
+            }.addOnFailureListener{
+                Log.d(_TAG, "error while uploading file!")
+            }
+        }
+        if(_isImageSet){
+            val fNameI = fileName+".jpg"
+            val filePath = _imageToAdd!!.data
+            var metadata = storageMetadata {
+                contentType = "image/jpeg"
+                setCustomMetadata("userName", userName)
+            }
+            val ref = mStorageRef.child(_currentTimestamp+"/"+fNameI)
+            var uploadTask = ref.putFile(filePath!!, metadata)
+            uploadTask.addOnSuccessListener {
+                Log.d(_TAG, "file uploaded!")
+                _mapItems[_currentTimestamp]!!.add(getStorageItem(ref))
+            }.addOnFailureListener{
+                Log.d(_TAG, "error while uploading file!")
+            }
+        }
+
+
+
 
     }
 }
