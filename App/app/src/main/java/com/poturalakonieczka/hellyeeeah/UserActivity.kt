@@ -30,7 +30,7 @@ class UserActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(ModelView::class.java)
         storageView = ViewModelProvider(this).get(StorageView::class.java)
         viewModel.setDateFilters()
-        viewModel.downloadGroups() // participant is download after group
+        viewModel.downloadGroups()
 
         setContentView(R.layout.user_main)
 
