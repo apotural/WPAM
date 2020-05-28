@@ -29,7 +29,8 @@ class UserActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this).get(ModelView::class.java)
         storageView = ViewModelProvider(this).get(StorageView::class.java)
-        viewModel.downloadParticipant()
+        viewModel.setDateFilters()
+        viewModel.downloadGroups()
 
         setContentView(R.layout.user_main)
 

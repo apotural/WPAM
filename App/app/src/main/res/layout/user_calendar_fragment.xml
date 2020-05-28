@@ -17,18 +17,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.applandeo.materialcalendarview.CalendarView
+    <com.prolificinteractive.materialcalendarview.MaterialCalendarView
         android:id="@+id/calendarView"
-        android:layout_width="wrap_content"
-        android:layout_height="450dp"
-        android:layout_marginTop="16dp"
-        app:headerColor="@color/colorHell"
-        app:todayLabelColor="@color/colorHell"
-        app:headerLabelColor="@color/colorWhite"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/calendarTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/calendarTextView"
+        app:mcv_showOtherDates="all" />
 
     <include
         layout="@layout/calendar_details"
