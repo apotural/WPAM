@@ -43,8 +43,9 @@ class ResourcesAdapter(var context: Context, var mutableList: MutableList<Storag
                         comment.text = item.getText()
                     }
                     type.contains("image/") -> {
-                        //image.setImageURI(item.getUri())
-                        Picasso.get().load(item.getUri()).fit().centerInside().into(image)
+                        Log.d(_TAG, "image start")
+                        image.setImageURI(item.getUri())
+                        Picasso.get().load(item.getUri()).into(image)
                     }
                     type.contains("video/") -> {
                         video.setVideoURI(item.getUri())

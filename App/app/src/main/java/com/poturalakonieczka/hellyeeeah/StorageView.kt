@@ -67,7 +67,7 @@ class StorageView : ViewModel() {
                 }
             }else{
                 item.downloadUrl.addOnSuccessListener {
-                    Log.d(_TAG, "we downloaded!")
+                    Log.d(_TAG, "we downloaded picture!")
                     storageItem.setUri(it)
                     needToRefresh.value = true
                 }.addOnFailureListener{

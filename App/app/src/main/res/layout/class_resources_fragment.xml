@@ -111,6 +111,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_back_arrow"
                     android:layout_alignParentEnd="true"
+                    android:background="@null"
                     />
                 <ImageButton
                     android:id="@+id/button_photo"
@@ -118,14 +119,16 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_add_photo"
                     android:layout_below="@id/button_back"
-                    android:layout_alignParentRight="true"/>
+                    android:layout_alignParentRight="true"
+                    android:background="@null"/>
                 <ImageButton
                     android:id="@+id/button_send"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_send"
                     android:layout_below="@id/button_photo"
-                    android:layout_alignParentRight="true"/>
+                    android:layout_alignParentRight="true"
+                    android:background="@null"/>
             </RelativeLayout>
 
         </RelativeLayout>
