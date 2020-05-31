@@ -42,7 +42,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:id="@+id/image_resource"/>
+                    android:id="@+id/image_resource"
+                    android:scaleType="fitCenter"
+                    android:gravity="center"
+                    android:adjustViewBounds="true"/>
                 <VideoView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

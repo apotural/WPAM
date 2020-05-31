@@ -90,6 +90,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_cancel"
                     android:id="@+id/but_cancel_photo"
+                    android:background="@null"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     />

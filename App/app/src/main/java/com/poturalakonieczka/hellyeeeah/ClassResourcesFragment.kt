@@ -61,7 +61,7 @@ class ClassResourcesFragment : Fragment(){
             setStateComment(false)
         }
         button_send.setOnClickListener {
-            UserActivity.storageView.sendMessage(text_comment.text.toString())
+            UserActivity.storageView.sendContent(text_comment.text.toString())
             clearComment()
         }
         button_photo.setOnClickListener {

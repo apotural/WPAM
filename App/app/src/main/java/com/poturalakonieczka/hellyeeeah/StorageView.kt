@@ -1,17 +1,24 @@
 package com.poturalakonieczka.hellyeeeah
 
+import android.app.Application
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
+import androidx.core.net.toFile
+import androidx.core.net.toUri
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storageMetadata
 import com.poturalakonieczka.hellyeeeah.storage.StorageItem
+import id.zelory.compressor.Compressor
+import kotlinx.coroutines.launch
+import java.io.File
 
 
-
-class StorageView : ViewModel() {
+class StorageView (application: Application): AndroidViewModel(application) {
     private val _MAX_SIZE: Long = 1024 * 1024
     private var _mapItems : MutableMap<String, MutableList<StorageItem?>> = mutableMapOf()
     private var _currentTimestamp :String =""
@@ -112,7 +119,7 @@ class StorageView : ViewModel() {
     }
 
     @ExperimentalStdlibApi
-    fun sendMessage(comment: String){
+    fun sendContent(comment: String){
         val userName = UserActivity.viewModel.getParticipantName()
         val tsLong = System.currentTimeMillis() / 1000
         val fileName = userName.replace(" ", "")+tsLong.toString()
@@ -136,23 +143,28 @@ class StorageView : ViewModel() {
         }
         if(_isImageSet){
             val fNameI = fileName+".jpg"
-            val filePath = _imageToAdd!!.data
+            val uri = _imageToAdd!!.data!!
+            val file = File(uri.path)
             var metadata = storageMetadata {
                 contentType = "image/jpeg"
                 setCustomMetadata("userName", userName)
             }
-            val ref = mStorageRef.child(_currentTimestamp+"/"+fNameI)
-            var uploadTask = ref.putFile(filePath!!, metadata)
-            uploadTask.addOnSuccessListener {
-                Log.d(_TAG, "file uploaded!")
-                _mapItems[_currentTimestamp]!!.add(getStorageItem(ref))
-            }.addOnFailureListener{
-                Log.d(_TAG, "error while uploading file!")
+            viewModelScope.launch{
+                val compressedImageFile = Compressor.compress(getApplication(),file )
+                val ref = mStorageRef.child(_currentTimestamp+"/"+fNameI)
+                val imageURI = Uri.fromFile(compressedImageFile)
+                var uploadTask = ref.putFile(imageURI, metadata)
+                uploadTask.addOnSuccessListener {
+                    Log.d(_TAG, "file uploaded!")
+                    _mapItems[_currentTimestamp]!!.add(getStorageItem(ref))
+                }.addOnFailureListener{
+                    Log.d(_TAG, "error while uploading file!")
+                }
             }
+
+
+
         }
-
-
-
-
     }
+
 }
