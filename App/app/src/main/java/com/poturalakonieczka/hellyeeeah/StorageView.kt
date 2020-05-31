@@ -1,11 +1,12 @@
 package com.poturalakonieczka.hellyeeeah
 
 import android.app.Application
+import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.net.Uri
+import android.provider.MediaStore
 import android.util.Log
-import androidx.core.net.toFile
-import androidx.core.net.toUri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -117,7 +118,21 @@ class StorageView (application: Application): AndroidViewModel(application) {
     fun getImageToAdd():Intent?{
         return _imageToAdd
     }
-
+    fun getRealPathFromUri(context: Context, contentUri: Uri): String? {
+        var cursor: Cursor? = null
+        return try {
+            val proj =
+                arrayOf(MediaStore.Images.Media.DATA)
+            cursor = context.contentResolver.query(contentUri, proj, null, null, null)
+            val column_index: Int? = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor?.moveToFirst()
+            cursor?.getString(column_index!!)
+        } finally {
+            if (cursor != null) {
+                cursor.close()
+            }
+        }
+    }
     @ExperimentalStdlibApi
     fun sendContent(comment: String){
         val userName = UserActivity.viewModel.getParticipantName()
@@ -144,11 +159,14 @@ class StorageView (application: Application): AndroidViewModel(application) {
         if(_isImageSet){
             val fNameI = fileName+".jpg"
             val uri = _imageToAdd!!.data!!
-            val file = File(uri.path)
+            val path =  getRealPathFromUri(getApplication(),uri)
+            Log.d(_TAG, path)
+            val file = File(path)
             var metadata = storageMetadata {
                 contentType = "image/jpeg"
                 setCustomMetadata("userName", userName)
             }
+
             viewModelScope.launch{
                 val compressedImageFile = Compressor.compress(getApplication(),file )
                 val ref = mStorageRef.child(_currentTimestamp+"/"+fNameI)
@@ -166,5 +184,6 @@ class StorageView (application: Application): AndroidViewModel(application) {
 
         }
     }
+
 
 }
