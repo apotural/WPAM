@@ -120,6 +120,8 @@ class ClassResourcesFragment : Fragment(){
     }
 
     private fun refreshContent(){
+
+        resourcesAdapter!!.sortList()
         resourcesAdapter!!.notifyDataSetChanged()
     }
 

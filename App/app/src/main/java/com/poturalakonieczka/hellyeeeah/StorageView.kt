@@ -38,7 +38,7 @@ class StorageView (application: Application): AndroidViewModel(application) {
         if(_mapItems.contains(pathToFolder)){ //w zalozeniu ze jak cos sie doda to nas powiadomi i zawola sie inna funkcje
             return
         }
-        var list : MutableList<StorageItem?> = mutableListOf()
+        val list : MutableList<StorageItem?> = mutableListOf()
         _mapItems[pathToFolder] = list
         val listRef = mStorageRef.child(pathToFolder)
         listRef.listAll()
@@ -61,7 +61,7 @@ class StorageView (application: Application): AndroidViewModel(application) {
 
     @ExperimentalStdlibApi
     private fun getStorageItem(item : StorageReference) : StorageItem?{
-        var storageItem = StorageItem()
+        val storageItem = StorageItem()
         item.metadata.addOnSuccessListener { sM ->
             storageItem.setMetadata(sM)
             if(sM.contentType!!.contains("text/")){

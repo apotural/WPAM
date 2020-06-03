@@ -86,4 +86,8 @@ class ResourcesAdapter(var context: Context, var mutableList: MutableList<Storag
     override fun getCount(): Int {
         return mutableList.size
     }
+
+    fun sortList(){
+        mutableList.sortBy { storageItem -> storageItem?.getMetadata()?.updatedTimeMillis }
+    }
 }
