@@ -1,4 +1,4 @@
-package com.poturalakonieczka.hellyeeeah.layoutCalendar
+package com.poturalakonieczka.hellyeeeah.layoutCalendar.decorators
 
 import android.text.style.LineBackgroundSpan
 import com.prolificinteractive.materialcalendarview.CalendarDay
@@ -24,7 +24,13 @@ class EventDotDecorator(private val color: Int, private val spanType: Int, priva
     }
 
     override fun decorate(view: DayViewFacade) {
-        val span: LineBackgroundSpan = CustomDotSpan(6F, color,xOffsets[spanType], yOffsets[spanType])
+        val span: LineBackgroundSpan =
+            CustomDotSpan(
+                6F,
+                color,
+                xOffsets[spanType],
+                yOffsets[spanType]
+            )
         view.addSpan(span)
     }
 }

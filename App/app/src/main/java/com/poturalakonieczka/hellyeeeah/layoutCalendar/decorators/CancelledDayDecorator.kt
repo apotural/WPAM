@@ -1,4 +1,4 @@
-package com.poturalakonieczka.hellyeeeah.layoutCalendar
+package com.poturalakonieczka.hellyeeeah.layoutCalendar.decorators
 
 
 import android.content.Context
