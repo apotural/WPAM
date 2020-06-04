@@ -372,5 +372,13 @@ class ModelView : ViewModel() {
         downloadAdditionalClasses()
     }
 
+    fun getParticipantName(): String{
+        var toReturn:String = ""
+        if(_participant != null){
+            toReturn = _participant!!.name.imie+" "+_participant!!.name.nazwisko
+        }
+        return toReturn
+    }
+
 }
 

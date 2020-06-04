@@ -42,7 +42,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
-                    android:id="@+id/image_resource"/>
+                    android:id="@+id/image_resource"
+                    android:scaleType="fitCenter"
+                    android:gravity="center"
+                    android:adjustViewBounds="true"/>
                 <VideoView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -65,7 +68,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_margin="3dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginRight="6dp"
                     android:layout_gravity="bottom"
                     android:textSize="10dp"
                     android:gravity="right"
@@ -76,7 +80,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="30"
-                    android:layout_margin="3dp"
+                    android:layout_marginLeft="6dp"
+                    android:layout_marginBottom="3dp"
                     android:layout_gravity="bottom"
                     android:textSize="10dp"
                     android:gravity="left" />
