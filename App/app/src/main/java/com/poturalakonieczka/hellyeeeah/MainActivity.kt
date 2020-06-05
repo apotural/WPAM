@@ -86,6 +86,7 @@ class MainActivity : AppCompatActivity() {
         loginButton.registerCallback(callbackManager,
             object : FacebookCallback<LoginResult> {
                 override fun onSuccess(loginResult: LoginResult) {
+
                     Log.d(TAG, "onSuccess: $loginResult")
                     exchangeAccessToken(loginResult.accessToken)
                 }
