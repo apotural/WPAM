@@ -230,8 +230,8 @@ class ModelView : ViewModel() {
                 Log.w(_TAG, "Listen failed.", e)
                 return@addSnapshotListener
             }
-
             if (snapshot != null && snapshot.exists()) {
+                _participantGroups.clear()
                 _groupHistory= snapshot.toObject(HistoriaGrup::class.java)
                 if(_groupHistory?.listaTerminow != null){
                     for(group in _groupHistory?.listaTerminow!!) {
@@ -253,7 +253,7 @@ class ModelView : ViewModel() {
                         val grupa = _mapGroupRef[group.grupa]
                         Log.d(_TAG, "grupa "+grupa?.dzien)
 
-                        if (grupa != null && grupa.aktualna){
+                        if (grupa != null && (group.ostatnie == null || group.ostatnie.toDate() > Calendar.getInstance().time)){
                             _participantGroups.add(grupa)
                             _participantGroupsLive.value = _participantGroupsLive.value
                         }
