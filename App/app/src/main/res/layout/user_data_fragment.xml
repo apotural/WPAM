@@ -181,7 +181,6 @@ android:layout_height="wrap_content">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/section_data"
-            android:visibility="gone"
             android:id="@+id/section_canceled">
             <TextView
                 android:layout_width="wrap_content"
@@ -210,7 +209,6 @@ android:layout_height="wrap_content">
         </RelativeLayout>
         <ListView
             android:id="@+id/list_canceled"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/section_canceled" />
@@ -218,7 +216,6 @@ android:layout_height="wrap_content">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/list_canceled"
-            android:visibility="gone"
             android:id="@+id/section_next">
             <TextView
                 android:layout_width="wrap_content"
@@ -248,7 +245,6 @@ android:layout_height="wrap_content">
         <androidx.cardview.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:visibility="gone"
             android:layout_marginRight="10dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/section_next"
