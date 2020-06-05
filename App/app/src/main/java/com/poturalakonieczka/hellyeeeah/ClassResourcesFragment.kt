@@ -11,14 +11,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.google.firebase.messaging.FirebaseMessaging
 import com.poturalakonieczka.hellyeeeah.layoutClasses.ResourcesAdapter
+import com.poturalakonieczka.hellyeeeah.services.Events
 import com.poturalakonieczka.hellyeeeah.storage.StorageItem
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.class_resources_fragment.*
 import java.util.*
 
 
-class ClassResourcesFragment : Fragment(){
+class ClassResourcesFragment : Fragment() {
     private var resourcesAdapter: ResourcesAdapter? = null
     private val _TAG: String = "My-log ClassResourcesFragment"
 
@@ -42,7 +44,8 @@ class ClassResourcesFragment : Fragment(){
         Log.d(_TAG, "Create Activity")
 
         val dateFormat = SimpleDateFormat("EEE, MM-dd-yyyy HH:mm")
-        val date = Date(UserActivity.storageView.getLastSelectedClassTime().toLong())
+        val time = UserActivity.storageView.getLastSelectedClassTime().toLong()
+        val date = Date(time)
         class_date_text.text = "Materiały z zajęć  "+dateFormat.format(date)
         val mutableList:MutableList<StorageItem?> = UserActivity.storageView.getCurrentList()
         resourcesAdapter = ResourcesAdapter(activity!!.applicationContext, mutableList)
@@ -51,6 +54,11 @@ class ClassResourcesFragment : Fragment(){
         UserActivity.storageView.needToRefresh.observe(activity!!, Observer { newValue: Boolean ->
             Log.d(_TAG, "refresh $newValue")
             refreshContent()
+        })
+        Events.serviceEvent.observe(activity!!, Observer {
+            if (it != null && !it.isBlank()){
+                UserActivity.storageView.update(it)
+            }
         })
         setStateComment(UserActivity.storageView.getIsCommenting())
 
@@ -77,6 +85,15 @@ class ClassResourcesFragment : Fragment(){
             UserActivity.storageView.setIsImageSet(false)
             lay_thumb.visibility = View.GONE
         }
+
+        FirebaseMessaging.getInstance().subscribeToTopic(time.toString())
+            .addOnCompleteListener { task ->
+                Log.d(_TAG, "subscription $time")
+                if (!task.isSuccessful) {
+                    Log.d(_TAG, "subscription failed")
+                }
+
+            }
 
     }
 
@@ -120,7 +137,6 @@ class ClassResourcesFragment : Fragment(){
     }
 
     private fun refreshContent(){
-
         resourcesAdapter!!.sortList()
         resourcesAdapter!!.notifyDataSetChanged()
     }

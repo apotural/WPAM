@@ -7,6 +7,17 @@
 
     <string name="calendar_title">Twój grafik</string>
 
+    <string name="user_data_title">Witaj w HellYeeeah!</string>
+    <string name="user_name_part">Twoje dane:</string>
+    <string name="user_canceled_classes">Odwołane zajęcia z tego tygodnia:</string>
+    <string name="user_next_classes">Twoje najbliższe zajęcia:</string>
+    <string name="user_groups_part">Twoje grupy:</string>
+    <string name="imie">Imię: </string>
+    <string name="nazwisko">Nazwisko: </string>
+    <string name="mail">E-mail: </string>
+    <string name="karnet">Karnet: </string>
+    <string name="teacher">Prowadzi: </string>
+    <string name="level">Poziom: </string>
     <string name="Open">open</string>
     <string name="Close">close</string>
 

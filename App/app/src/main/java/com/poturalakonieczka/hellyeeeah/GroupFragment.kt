@@ -24,7 +24,7 @@ class GroupFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        textView2.text = "group"
+        //textView2.text = "group"
     }
 
 }
