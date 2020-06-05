@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 import com.poturalakonieczka.hellyeeeah.database.*
 import com.poturalakonieczka.hellyeeeah.layoutCalendar.BasicClassInCalendar
+import com.poturalakonieczka.hellyeeeah.layoutCalendar.CalendarItem
 import com.poturalakonieczka.hellyeeeah.layoutCalendar.ClassInCalendar
 import java.util.*
 
@@ -30,9 +31,6 @@ class ModelView : ViewModel() {
     private var _mapListener: MutableMap<DocumentReference?, ListenerRegistration> = mutableMapOf()
     private var _mapGroupRef: MutableMap<DocumentReference?, Grupa?> = mutableMapOf()
 
-    private var _participantGroups: MutableList<Grupa?> = mutableListOf()
-    private val _participantGroupsLive = MutableLiveData<List<Grupa?>>().apply { value = _participantGroups }
-
     private var _cancelledClasses: ZajeciaOdwolane? = null
     private var _additionalClasses: ZajeciaDodatkowe? = null
     private var _absentClasses: ZajeciaNieobecnosci? = null
@@ -46,37 +44,39 @@ class ModelView : ViewModel() {
     private var _convertedAbsentClasses: MutableList<ClassInCalendar?> = mutableListOf()
     private var _convertedBasicClasses: MutableList<BasicClassInCalendar?> = mutableListOf()
 
-    private val _basicClassesCalendar = MutableLiveData<List<BasicClassInCalendar?>>().apply {value = _convertedBasicClasses}
-    private val _absentClassesCalendar = MutableLiveData<List<ClassInCalendar?>>().apply {value = _convertedAbsentClasses}
-    private val _additionalClassesCalendar = MutableLiveData<List<ClassInCalendar?>>().apply {value = _convertedAdditionalClasses}
+    /* new object */
+    private var _convertedCalendarClassesList: MutableList<CalendarItem?> = mutableListOf()
+    private val _calendarClassesList = MutableLiveData<List<CalendarItem?>>().apply {value = _convertedCalendarClassesList}
+    val calendarClassesList: LiveData<List<CalendarItem?>>
+        get() = _calendarClassesList
+    /* new object */
+
+    /* it was somewhere above */
+    private var _participantGroups: MutableList<Grupa?> = mutableListOf()
+    private val _participantGroupsLive = MutableLiveData<List<Grupa?>>().apply { value = _participantGroups }
+    val participantGroupsLive: LiveData<List<Grupa?>>
+        get() = _participantGroupsLive
+    /*  it was somewhere above  */
+
+    /*  _cancelledClasses is somewhere above  */
+    val cancelledClassesCalendar: LiveData<ZajeciaOdwolane?>
+        get() = _cancelledClassesCalendar
     private val _cancelledClassesCalendar = MutableLiveData<ZajeciaOdwolane?>().apply { value = _cancelledClasses }
+    /*  _cancelledClasses is somewhere above  */
+
+    /*  _participant is somewhere above  */
     private val _participantData = MutableLiveData<Kursant?>().apply { value = _participant }
+    val participantName : LiveData<Kursant?>
+        get() = _participantData
+    /*  _participant is somewhere above  */
 
     fun getMaxDate(): Date? {
         return maxDateCalendar
     }
-
     fun getMinDate(): Date? {
         return minDateCalendar
     }
 
-    val absentClassesCalendar: LiveData<List<ClassInCalendar?>>
-        get() = _absentClassesCalendar
-
-    val additionalClassesCalendar: LiveData<List<ClassInCalendar?>>
-        get() = _additionalClassesCalendar
-
-    val basicClassesCalendar: LiveData<List<BasicClassInCalendar?>>
-        get() = _basicClassesCalendar
-
-    val cancelledClassesCalendar: LiveData<ZajeciaOdwolane?>
-        get() = _cancelledClassesCalendar
-
-    val participantGroupsLive: LiveData<List<Grupa?>>
-        get() = _participantGroupsLive
-
-    val participantName : LiveData<Kursant?>
-        get() = _participantData
 
     fun setDateFilters(){
         val min: Calendar = Calendar.getInstance()
@@ -289,7 +289,7 @@ class ModelView : ViewModel() {
         }
 
         _convertedBasicClasses.addAll(tmpConvertedBasicClasses)
-        _basicClassesCalendar.apply { value = _convertedBasicClasses }
+        //_basicClassesCalendar.apply { value = _convertedBasicClasses }
     }
 
     private fun removePreviousVersion(it: BasicClassInCalendar?, groupR: DocumentReference?):Boolean {
@@ -336,7 +336,7 @@ class ModelView : ViewModel() {
                 }
 
                 _convertedAbsentClasses = tmpConvertedAbsentClasses
-                _absentClassesCalendar.apply { value = _convertedAbsentClasses }
+                //_absentClassesCalendar.apply { value = _convertedAbsentClasses }
             }
         }
     }
@@ -375,7 +375,7 @@ class ModelView : ViewModel() {
                     }
                 }
                 _convertedAdditionalClasses = tmpConvertedAdditionalClasses
-                _additionalClassesCalendar.apply { value = _convertedAdditionalClasses }
+                //_additionalClassesCalendar.apply { value = _convertedAdditionalClasses }
             }
         }
     }
