@@ -3,9 +3,11 @@
 xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="match_parent"
 android:layout_height="wrap_content">
-<ScrollView
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    <androidx.core.widget.NestedScrollView
+        android:fillViewport="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical">
 
     <RelativeLayout
         android:id="@+id/container"
@@ -211,6 +213,7 @@ android:layout_height="wrap_content">
             android:id="@+id/list_canceled"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="true"
             android:layout_below="@+id/section_canceled" />
         <RelativeLayout
             android:layout_width="match_parent"
@@ -320,10 +323,11 @@ android:layout_height="wrap_content">
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:nestedScrollingEnabled="true"
             android:layout_below="@+id/section_groups" />
 
     </RelativeLayout>
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
 
 </io.codetail.widget.RevealFrameLayout>
