@@ -30,6 +30,9 @@ class ModelView : ViewModel() {
     private var _mapListener: MutableMap<DocumentReference?, ListenerRegistration> = mutableMapOf()
     private var _mapGroupRef: MutableMap<DocumentReference?, Grupa?> = mutableMapOf()
 
+    private var _participantGroups: MutableList<Grupa?> = mutableListOf()
+    private val _participantGroupsLive = MutableLiveData<List<Grupa?>>().apply { value = _participantGroups }
+
     private var _cancelledClasses: ZajeciaOdwolane? = null
     private var _additionalClasses: ZajeciaDodatkowe? = null
     private var _absentClasses: ZajeciaNieobecnosci? = null
@@ -47,6 +50,7 @@ class ModelView : ViewModel() {
     private val _absentClassesCalendar = MutableLiveData<List<ClassInCalendar?>>().apply {value = _convertedAbsentClasses}
     private val _additionalClassesCalendar = MutableLiveData<List<ClassInCalendar?>>().apply {value = _convertedAdditionalClasses}
     private val _cancelledClassesCalendar = MutableLiveData<ZajeciaOdwolane?>().apply { value = _cancelledClasses }
+    private val _participantData = MutableLiveData<Kursant?>().apply { value = _participant }
 
     fun getMaxDate(): Date? {
         return maxDateCalendar
@@ -68,6 +72,11 @@ class ModelView : ViewModel() {
     val cancelledClassesCalendar: LiveData<ZajeciaOdwolane?>
         get() = _cancelledClassesCalendar
 
+    val participantGroupsLive: LiveData<List<Grupa?>>
+        get() = _participantGroupsLive
+
+    val participantName : LiveData<Kursant?>
+        get() = _participantData
 
     fun setDateFilters(){
         val min: Calendar = Calendar.getInstance()
@@ -96,7 +105,7 @@ class ModelView : ViewModel() {
         downloadGroup(groupRef)
     }
 
-    fun downloadParticipant() {
+    private fun downloadParticipant() {
         if(_user != null) {
             _user!!.email?.let {_db.collection("Kursanci").document(it) }
                 ?.addSnapshotListener { snapshot, e ->
@@ -107,6 +116,7 @@ class ModelView : ViewModel() {
 
                 if (snapshot != null && snapshot.exists()) {
                     _participant = snapshot.toObject(Kursant::class.java)
+                    _participantData.value = _participant
                 }
             }
             downloadClasses()
@@ -240,14 +250,19 @@ class ModelView : ViewModel() {
                                 addBasicClasses(group.grupa, minimum, maximum)
                             }
                         }
+                        val grupa = _mapGroupRef[group.grupa]
+                        Log.d(_TAG, "grupa "+grupa?.dzien)
+
+                        if (grupa != null && grupa.aktualna){
+                            _participantGroups.add(grupa)
+                            _participantGroupsLive.value = _participantGroupsLive.value
+                        }
+
                     }
                 }
             }
         }
     }
-
-
-
 
     private fun addBasicClasses(groupRef: DocumentReference?, minimum: Date?, maximum: Date?) {
         val group = _mapGroupRef[groupRef]
@@ -375,10 +390,13 @@ class ModelView : ViewModel() {
     fun getParticipantName(): String{
         var toReturn:String = ""
         if(_participant != null){
-            toReturn = _participant!!.name.imie+" "+_participant!!.name.nazwisko
+            toReturn = _participant?.name?.imie+" "+_participant?.name?.nazwisko
         }
         return toReturn
     }
 
+    fun getParticipantMail():String?{
+        return _user?.email
+    }
 }
 
