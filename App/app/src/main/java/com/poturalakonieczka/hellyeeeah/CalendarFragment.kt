@@ -39,6 +39,9 @@ class CalendarFragment: Fragment(){
     private val monthFormat = SimpleDateFormat("MM", Locale.getDefault())
     private val dayFormat = SimpleDateFormat("dd", Locale.getDefault())
 
+    /* list that contains only proper calendar items, must be actualized in model view properly */
+    var calendarClassesList: List<CalendarItem?> = mutableListOf()
+
 //    private var previousCancelledClasses: ZajeciaOdwolane = ZajeciaOdwolane()
 //    private var previousAdditionalClasses: MutableList<ClassInCalendar?> = mutableListOf()
 //    private var previousAbsentClasses: MutableList<ClassInCalendar?> = mutableListOf()
@@ -66,51 +69,11 @@ class CalendarFragment: Fragment(){
 
         initCalendarView()
 
-        var calendarClassesList: MutableList<CalendarItem?> = mutableListOf()
-
-
-
-        val l0 = LocalDateTime.parse("05/06/2020 10:15", DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
-        val l1 = LocalDateTime.parse("05/06/2020 12:15", DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
-        val l2 = LocalDateTime.parse("05/06/2020 14:15", DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
-        val l3 = LocalDateTime.parse("05/06/2020 18:15", DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
-        val l4 = LocalDateTime.parse("06/06/2020 10:15", DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
-        val l5 = LocalDateTime.parse("07/06/2020 12:15", DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
-        val l6 = LocalDateTime.parse("03/06/2020 10:15", DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
-        val l7 = LocalDateTime.parse("03/06/2020 12:15", DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
-
-        val date0 = Date.from(l0.atZone(ZoneId.systemDefault()).toInstant());
-        val date1 = Date.from(l1.atZone(ZoneId.systemDefault()).toInstant());
-        val date2 = Date.from(l2.atZone(ZoneId.systemDefault()).toInstant());
-        val date3 = Date.from(l3.atZone(ZoneId.systemDefault()).toInstant());
-        val date4 = Date.from(l4.atZone(ZoneId.systemDefault()).toInstant());
-        val date5 = Date.from(l5.atZone(ZoneId.systemDefault()).toInstant());
-        val date6 = Date.from(l6.atZone(ZoneId.systemDefault()).toInstant())
-        val date7 = Date.from(l7.atZone(ZoneId.systemDefault()).toInstant());
-
-        val cal1 = CalendarItem(null, null, Timestamp(date0), null, date0, null, "Pole dance", "", "Marta Polak", "", "BASIC")
-
-        val cal2 = CalendarItem(null, null, Timestamp(date1), null, date1, null, "Pole dance", "", "Marta Polak", "", "ADDITIONAL")
-
-        val cal3 = CalendarItem(null, null, Timestamp(date2), Timestamp(date3), date2, date3, "Pole dance", "Stretching", "Marta Polak", "Marta Polak", "CATCH_UP")
-
-        val cal4 = CalendarItem(null, null, Timestamp(date3), Timestamp(date2), date3, date2, "Stretching", "Pole dance", "Marta Polak", "Marta Polak", "MISSED_CATCH_UP")
-
-        val cal5 = CalendarItem(null, null, Timestamp(date4), null, date4, null, "Pole dance", "", "Marta Polak", "", "MISSED")
-
-        val cal6 = CalendarItem(null, null, Timestamp(date6), null, date6, null, "Pole dance", "", "Marta Polak", "", "EXCUSED")
-
-        val cal7 = CalendarItem(null, null, Timestamp(date7), null, date7, null, "Pole dance", "", "Marta Polak", "", "LOST")
-
-        calendarClassesList.add(cal1)
-        calendarClassesList.add(cal2)
-        calendarClassesList.add(cal3)
-
-        calendarClassesList.add(cal4)
-        calendarClassesList.add(cal5)
-        calendarClassesList.add(cal6)
-        calendarClassesList.add(cal7)
-
+        UserActivity.viewModel.calendarClassesList.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            calendarClassesList = it
+            adapter.setList(calendarClassesList)
+            /* update filtering again */
+        })
         adapter = CalendarAdapter(activity!!.applicationContext, calendarClassesList)
 
         val currentDay: Calendar = Calendar.getInstance()
