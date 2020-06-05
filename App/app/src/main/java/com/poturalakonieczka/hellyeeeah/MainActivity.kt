@@ -1,19 +1,22 @@
 package com.poturalakonieczka.hellyeeeah
 
+import android.R.attr.data
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.*
 import com.facebook.login.LoginResult
-import com.google.firebase.auth.AuthResult
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuth.AuthStateListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.functions.FirebaseFunctions
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+
 
 class MainActivity : AppCompatActivity() {
     private var callbackManager: CallbackManager? = null
@@ -24,15 +27,35 @@ class MainActivity : AppCompatActivity() {
     private fun exchangeAccessToken(token: AccessToken) {
         val credential = FacebookAuthProvider.getCredential(token.token)
         fbAuth!!.signInWithCredential(credential)
-//            .addOnCompleteListener(this
-//            ) { task ->
-//                if (task.isSuccessful) {
-//                    finish()
-//                    Log.d("My-deb", "Zalogowanie sie")
-//                    val intent = Intent(this@MainActivity, UserActivity::class.java)
-//                    startActivity(intent)
-//                }
-//            }
+            .addOnCompleteListener(this
+            ) { task ->
+                if (task.isSuccessful) {
+                    var fullName = fbAuth!!.currentUser?.displayName
+                    var listName = fullName?.split(" ")
+                    var name = ""
+                    var surname = ""
+                    if (listName != null) {
+                        if(listName.isNotEmpty()){
+                            name = listName[0];
+                        }
+                        if(listName.size > 1){
+                            surname = listName[1];
+                        }
+                    }
+                    val data = hashMapOf(
+                        "email" to fbAuth!!.currentUser?.email,
+                        "name" to name,
+                        "surname" to surname
+                    )
+                    FirebaseFunctions.getInstance()
+                        .getHttpsCallable("loginApp")
+                        .call(data)
+                        .continueWith { task ->
+                            val result = task.result?.data as String
+                            result
+                        }
+                }
+            }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
