@@ -30,9 +30,12 @@ class UserDataFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         Log.d(_TAG, "Activity created")
         //groupsAdapter = GroupsAdapter(activity!!.applicationContext, UserActivity.viewModel.participantGroupsLive.value!!)
+
+
+
         groupsAdapter = UserActivity.viewModel.participantGroupsLive.value?.let {
             GroupsAdapter(activity!!.applicationContext , it)
-        };
+        }
         groupsAdapter!!.notifyDataSetChanged()
         list_groups.adapter = groupsAdapter
         UserActivity.viewModel.participantGroupsLive.observe(activity!!, Observer {
