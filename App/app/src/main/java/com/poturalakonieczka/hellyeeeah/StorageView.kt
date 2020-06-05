@@ -171,7 +171,7 @@ class StorageView (application: Application): AndroidViewModel(application) {
             val path =  getRealPathFromUri(getApplication(),uri)
             Log.d(_TAG, path)
             val file = File(path)
-            var metadata = storageMetadata {
+            val metadata = storageMetadata {
                 contentType = "image/jpeg"
                 setCustomMetadata("userName", userName)
             }
@@ -180,7 +180,7 @@ class StorageView (application: Application): AndroidViewModel(application) {
                 val compressedImageFile = Compressor.compress(getApplication(),file )
                 val ref = mStorageRef.child(_currentTimestamp+"/"+fNameI)
                 val imageURI = Uri.fromFile(compressedImageFile)
-                var uploadTask = ref.putFile(imageURI, metadata)
+                val uploadTask = ref.putFile(imageURI, metadata)
                 uploadTask.addOnSuccessListener {
                     Log.d(_TAG, "file uploaded!")
                 }.addOnFailureListener{
