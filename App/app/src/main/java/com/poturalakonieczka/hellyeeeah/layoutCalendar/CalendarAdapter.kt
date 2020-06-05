@@ -188,4 +188,9 @@ class CalendarAdapter (private val appContext: Context, private val calendarList
         }
     }
 
+    fun setList(calendarClassesList: List<CalendarItem?>) {
+        mCalendarList = calendarClassesList
+        notifyDataSetChanged()
+    }
+
 }
