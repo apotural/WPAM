@@ -34,7 +34,6 @@ class StorageView (application: Application): AndroidViewModel(application) {
     @ExperimentalStdlibApi
     fun getFiles(pathToFolder : String){
         _currentTimestamp = pathToFolder
-        Log.d(_TAG, "Start ") //just in case needed
         if(_mapItems.contains(pathToFolder)){ //w zalozeniu ze jak cos sie doda to nas powiadomi i zawola sie inna funkcje
             return
         }
@@ -44,7 +43,6 @@ class StorageView (application: Application): AndroidViewModel(application) {
         listRef.listAll()
             .addOnSuccessListener { listResult ->
                 listResult.prefixes.forEach { prefix ->
-                    Log.d(_TAG, "pref") //just in case needed
                 }
                 listResult.items.forEach { item ->
                     var storageItem = getStorageItem(item)
@@ -59,6 +57,10 @@ class StorageView (application: Application): AndroidViewModel(application) {
 
     }
 
+    private fun downloadItems(list : MutableList<StorageItem?>){
+
+    }
+
     @ExperimentalStdlibApi
     private fun getStorageItem(item : StorageReference) : StorageItem?{
         val storageItem = StorageItem()
@@ -67,7 +69,6 @@ class StorageView (application: Application): AndroidViewModel(application) {
             if(sM.contentType!!.contains("text/")){
                 item.getBytes(_MAX_SIZE).addOnSuccessListener {
                     var text = it!!.decodeToString()
-                    Log.d(_TAG, "we downloaded! dec "+text)
                     storageItem.setText(text)
                     needToRefresh.value = true
                 }.addOnFailureListener{
@@ -75,7 +76,6 @@ class StorageView (application: Application): AndroidViewModel(application) {
                 }
             }else{
                 item.downloadUrl.addOnSuccessListener {
-                    Log.d(_TAG, "we downloaded picture!")
                     storageItem.setUri(it)
                     needToRefresh.value = true
                 }.addOnFailureListener{
@@ -134,6 +134,16 @@ class StorageView (application: Application): AndroidViewModel(application) {
         }
     }
     @ExperimentalStdlibApi
+    fun update(string: String){
+        Log.d(_TAG, "update")
+        val dir = string.substringBefore('/')
+        if(_mapItems.contains(dir)){
+            val ref = mStorageRef.child(string)
+            _mapItems[dir]!!.add(getStorageItem(ref))
+        }
+    }
+
+    @ExperimentalStdlibApi
     fun sendContent(comment: String){
         val userName = UserActivity.viewModel.getParticipantName()
         val tsLong = System.currentTimeMillis() / 1000
@@ -151,7 +161,6 @@ class StorageView (application: Application): AndroidViewModel(application) {
             var uploadTask = ref.putBytes(data, metadata)
             uploadTask.addOnSuccessListener {
                 Log.d(_TAG, "file uploaded!")
-                _mapItems[_currentTimestamp]!!.add(getStorageItem(ref))
             }.addOnFailureListener{
                 Log.d(_TAG, "error while uploading file!")
             }
@@ -174,7 +183,6 @@ class StorageView (application: Application): AndroidViewModel(application) {
                 var uploadTask = ref.putFile(imageURI, metadata)
                 uploadTask.addOnSuccessListener {
                     Log.d(_TAG, "file uploaded!")
-                    _mapItems[_currentTimestamp]!!.add(getStorageItem(ref))
                 }.addOnFailureListener{
                     Log.d(_TAG, "error while uploading file!")
                 }
