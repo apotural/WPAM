@@ -10,6 +10,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 import com.poturalakonieczka.hellyeeeah.database.*
 import com.poturalakonieczka.hellyeeeah.layoutCalendar.CalendarItem
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -220,9 +221,9 @@ class ModelView : ViewModel() {
                 val week: Calendar = Calendar.getInstance()
                 week.add(Calendar.DATE, 7)
 
-                val copy = _cancelledClasses
-                copy?.listaTerminow = copy?.listaTerminow?.filter { shouldRetain(it, Calendar.getInstance().time, week.time) } as MutableList<Timestamp?>
-                _cancelledClassesWeek.value = copy.listaTerminow
+                var copy = _cancelledClasses?.listaTerminow
+                copy = copy?.filter { shouldRetain(it, Calendar.getInstance().time, week.time) } as MutableList<Timestamp?>
+                _cancelledClassesWeek.value = copy
             }
         }
     }
@@ -488,18 +489,18 @@ class ModelView : ViewModel() {
     fun getParticipantMail():String?{
         return _user?.email
     }
+    private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     fun getCurrentDateString(): String {
         if(_currentCalendarSelectedDate == null){
             val currentDay: Calendar = Calendar.getInstance()
-            _currentCalendarSelectedDate = currentDay.get(Calendar.DATE).toString() +"/"+(currentDay.get(Calendar.MONTH)+1).toString()+
-                    "/"+currentDay.get(Calendar.YEAR).toString()
+            _currentCalendarSelectedDate = dateFormat.format(currentDay.time)
         }
         return _currentCalendarSelectedDate!!
     }
 
-    fun updateCurrentDateString(dateString: String) {
-        _currentCalendarSelectedDate = dateString
+    fun updateCurrentDateString(dateCalendar: Calendar) {
+        _currentCalendarSelectedDate = dateFormat.format(dateCalendar.time)
     }
 }
 

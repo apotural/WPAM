@@ -157,33 +157,24 @@ class CalendarAdapter (private val appContext: Context, private val calendarList
         return convertView
     }
 
-    override fun getFilter(): Filter {
-
-        return object : Filter() {
-            override fun publishResults(charSequence: CharSequence?, filterResults: Filter.FilterResults) {
-                mCalendarDisplayList = filterResults.values as List<CalendarItem?>
-                notifyDataSetChanged()
-
-            }
-
-            override fun performFiltering(charSequence: CharSequence?): Filter.FilterResults {
-                val chosenDate: Date? = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(charSequence.toString())
-
-                val filterResults = Filter.FilterResults()
-                filterResults.values = if (chosenDate==null)
-                    mCalendarList
-                else
-                    mCalendarList.filter {
-                        if(it == null)
-                            false
-                        else {
-                            dateFormat.format(it.date1) == dateFormat.format(chosenDate)
-                        }
-                    }
-
-                return filterResults
+    fun filter(dateFilter: String?){
+        if(dateFilter == "cancelled"){
+            Log.d("my-deb", "cancelled")
+            mCalendarDisplayList = mutableListOf()
+            notifyDataSetChanged()
+            return
+        }
+        Log.d("my-deb", "not-cancelled")
+        val chosenDate: Date? = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).parse(dateFilter)
+        val tmpCalendarDisplayList = mCalendarList.filter {
+            if(it == null)
+                false
+            else {
+                dateFormat.format(it.date1) == dateFormat.format(chosenDate)
             }
         }
+        mCalendarDisplayList = tmpCalendarDisplayList
+        notifyDataSetChanged()
     }
 
     fun setList(calendarClassesList: List<CalendarItem?>) {
