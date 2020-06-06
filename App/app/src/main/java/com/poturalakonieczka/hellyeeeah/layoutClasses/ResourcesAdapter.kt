@@ -65,7 +65,7 @@ class ResourcesAdapter(var context: Context, var mutableList: MutableList<Storag
                 if (userName != null){
                     userNameText.text = userName
                 }
-                val dateFormat = SimpleDateFormat("MM-dd-yyyy HH:mm:ss")
+                val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
                 val date = Date(metadata!!.creationTimeMillis)
                 timeOfElement.text = dateFormat.format(date)
 
@@ -89,4 +89,5 @@ class ResourcesAdapter(var context: Context, var mutableList: MutableList<Storag
     fun sortList(){
         mutableList.sortBy { storageItem -> storageItem?.getMetadata()?.updatedTimeMillis }
     }
+
 }

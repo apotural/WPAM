@@ -9,16 +9,23 @@
 
     <string name="user_data_title">Witaj w HellYeeeah!</string>
     <string name="user_name_part">Twoje dane:</string>
-    <string name="user_canceled_classes">Odwołane zajęcia z tego tygodnia:</string>
-    <string name="user_next_classes">Twoje najbliższe zajęcia:</string>
+    <string name="user_canceled_classes">Odwołane zajęcia:</string>
+    <string name="user_next_classes">Twoje kolejne zajęcia:</string>
     <string name="user_groups_part">Twoje grupy:</string>
     <string name="imie">Imię: </string>
     <string name="nazwisko">Nazwisko: </string>
     <string name="mail">E-mail: </string>
     <string name="karnet">Karnet: </string>
     <string name="teacher">Prowadzi: </string>
+    <string name="notification">Tablica powiadomień: </string>
     <string name="level">Poziom: </string>
     <string name="Open">open</string>
     <string name="Close">close</string>
+    <string name="about_us">Kontakt do Nas: </string>
+
+    <string name="webpage">hellyeeeah.pl</string>
+    <string name="phone">+48 884 604 604</string>
+    <string name="mailAddress">zapisy@hellyeeeah.pl</string>
+    <string name="address"> ul. Nowowiejska 1/3 lok. 13 00-646 Warszawa</string>
 
 </resources>

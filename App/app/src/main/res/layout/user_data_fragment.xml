@@ -183,16 +183,57 @@ android:layout_height="wrap_content">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/section_data"
-            android:visibility="gone"
-            android:id="@+id/section_canceled">
+            android:id="@+id/section_groups"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:text="@string/user_groups_part"
+                android:fontFamily="@font/aleo"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/title_groups"/>
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/niceGray"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/title_groups" />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/niceGray"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/title_groups"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+        <ListView
+            android:id="@+id/list_groups"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:nestedScrollingEnabled="true"
+            android:layout_below="@+id/section_groups" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/list_groups"
+            android:id="@+id/section_notify"
+            android:visibility="gone">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
-                android:text="@string/user_canceled_classes"
+                android:text="@string/notification"
                 android:fontFamily="@font/aleo"
                 android:layout_centerHorizontal="true"
-                android:id="@+id/title_canceled_classes"/>
+                android:id="@+id/title_notification"/>
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
@@ -200,11 +241,44 @@ android:layout_height="wrap_content">
                 android:background="@color/niceGray"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_toStartOf="@+id/title_canceled_classes" />
+                android:layout_toStartOf="@+id/title_notification" />
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
                 android:layout_margin="10dp"
+                android:background="@color/niceGray"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@+id/title_notification"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/section_notify"
+            android:visibility="gone"
+            android:id="@+id/section_canceled">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:text="@string/user_canceled_classes"
+                android:fontFamily="@font/aleo"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/title_canceled_classes"/>
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/niceGray"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/title_canceled_classes" />
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:background="@color/niceGray"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/title_canceled_classes"
@@ -222,11 +296,12 @@ android:layout_height="wrap_content">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/list_canceled"
+            android:visibility="gone"
             android:id="@+id/section_next">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15dp"
+                android:textSize="12dp"
                 android:text="@string/user_next_classes"
                 android:fontFamily="@font/aleo"
                 android:layout_centerHorizontal="true"
@@ -234,7 +309,8 @@ android:layout_height="wrap_content">
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
-                android:layout_margin="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:background="@color/niceGray"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
@@ -242,7 +318,8 @@ android:layout_height="wrap_content">
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
-                android:layout_margin="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:background="@color/niceGray"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/title_next_classes"
@@ -255,6 +332,7 @@ android:layout_height="wrap_content">
             android:layout_height="wrap_content"
             android:layout_below="@+id/section_next"
             android:layout_marginLeft="10dp"
+            android:visibility="gone"
             card_view:cardCornerRadius="10dp"
             card_view:cardElevation="5dp"
             card_view:cardUseCompatPadding="true"
@@ -288,21 +366,19 @@ android:layout_height="wrap_content">
 
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
-
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/next_class_body"
-            android:id="@+id/section_groups">
+            android:id="@+id/section_about_us">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15dp"
-                android:text="@string/user_groups_part"
+                android:text="@string/about_us"
                 android:fontFamily="@font/aleo"
                 android:layout_centerHorizontal="true"
-                android:id="@+id/title_groups"/>
+                android:id="@+id/title_about_us"/>
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
@@ -310,24 +386,18 @@ android:layout_height="wrap_content">
                 android:background="@color/niceGray"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true"
-                android:layout_toStartOf="@+id/title_groups" />
+                android:layout_toStartOf="@+id/title_about_us" />
             <View
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
                 android:layout_margin="10dp"
                 android:background="@color/niceGray"
                 android:layout_centerVertical="true"
-                android:layout_toEndOf="@+id/title_groups"
+                android:layout_toEndOf="@+id/title_about_us"
                 android:layout_alignParentEnd="true"/>
         </RelativeLayout>
-        <ListView
-            android:id="@+id/list_groups"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:nestedScrollingEnabled="true"
-            android:layout_below="@+id/section_groups" />
+
+
 
     </RelativeLayout>
 
