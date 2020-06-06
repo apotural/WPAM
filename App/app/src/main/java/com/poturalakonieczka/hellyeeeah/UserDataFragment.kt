@@ -31,9 +31,10 @@ class UserDataFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Log.d(_TAG, "Activity created")
+
         groupsAdapter = UserActivity.viewModel.participantGroupsLive.value?.let {
             GroupsAdapter(activity!!.applicationContext , it)
-        };
+        }
         groupsAdapter!!.notifyDataSetChanged()
         list_groups.adapter = groupsAdapter
         UserActivity.viewModel.participantGroupsLive.observe(activity!!, Observer {
@@ -41,13 +42,13 @@ class UserDataFragment : Fragment() {
         })
 
         canceledAdapter = UserActivity.viewModel.cancelledClassesWeek.value?.let {
-            CanceledAdapter(activity!!.applicationContext , it.listaTerminow)
+            CanceledAdapter(activity!!.applicationContext , it)
         };
         list_canceled.adapter = canceledAdapter
         UserActivity.viewModel.cancelledClassesWeek.observe(activity!!, Observer {
             Log.d(_TAG, "refresh canceled")
             if(it != null){
-                canceledAdapter = CanceledAdapter(activity!!.applicationContext, it.listaTerminow)
+                canceledAdapter = CanceledAdapter(activity!!.applicationContext, it)
                 list_canceled.adapter = canceledAdapter
             }
 

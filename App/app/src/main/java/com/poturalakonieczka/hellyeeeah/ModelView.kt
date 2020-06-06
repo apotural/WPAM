@@ -1,5 +1,6 @@
 package com.poturalakonieczka.hellyeeeah
 
+import android.icu.text.DateFormat.DAY
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -40,9 +41,9 @@ class ModelView : ViewModel() {
     private var minDateCalendar: Date? = null
     private var currDateCalendar: Date? = null
 
-    private var _convertedAdditionalClasses: MutableList<ClassInCalendar?> = mutableListOf()
-    private var _convertedAbsentClasses: MutableList<ClassInCalendar?> = mutableListOf()
-    private var _convertedBasicClasses: MutableList<BasicClassInCalendar?> = mutableListOf()
+    private var _convertedAdditionalClasses: MutableList<CalendarItem?> = mutableListOf()
+    private var _convertedAbsentClasses: MutableList<CalendarItem?> = mutableListOf()
+    private var _convertedBasicClasses: MutableList<CalendarItem?> = mutableListOf()
 
     /* new object */
     private var _convertedCalendarClassesList: MutableList<CalendarItem?> = mutableListOf()
@@ -62,6 +63,12 @@ class ModelView : ViewModel() {
     val cancelledClassesCalendar: LiveData<ZajeciaOdwolane?>
         get() = _cancelledClassesCalendar
     private val _cancelledClassesCalendar = MutableLiveData<ZajeciaOdwolane?>().apply { value = _cancelledClasses }
+    /*  _cancelledClasses is somewhere above  */
+
+    /*  _cancelledClasses is somewhere above  */
+    val cancelledClassesWeek: LiveData<List<Timestamp?>>
+        get() = _cancelledClassesWeek
+    private val _cancelledClassesWeek = MutableLiveData<List<Timestamp?>>().apply { value = mutableListOf() }
     /*  _cancelledClasses is somewhere above  */
 
     /*  _participant is somewhere above  */
@@ -209,6 +216,13 @@ class ModelView : ViewModel() {
                 _cancelledClasses = snapshot.toObject(ZajeciaOdwolane::class.java)
                 _cancelledClasses?.listaTerminow = _cancelledClasses?.listaTerminow?.filter { shouldRetain(it) } as MutableList<Timestamp?>
                 _cancelledClassesCalendar.value = _cancelledClasses
+
+                val week: Calendar = Calendar.getInstance()
+                week.add(Calendar.DATE, 7)
+
+                val copy = _cancelledClasses
+                copy?.listaTerminow = copy?.listaTerminow?.filter { shouldRetain(it, Calendar.getInstance().time, week.time) } as MutableList<Timestamp?>
+                _cancelledClassesWeek.value = copy.listaTerminow
             }
         }
     }
@@ -266,34 +280,37 @@ class ModelView : ViewModel() {
 
     private fun addBasicClasses(groupRef: DocumentReference?, minimum: Date?, maximum: Date?) {
         val group = _mapGroupRef[groupRef]
-        _convertedBasicClasses = _convertedBasicClasses.filter{ !removePreviousVersion(it, groupRef)} as MutableList<BasicClassInCalendar?>
-        var tmpConvertedBasicClasses: MutableList<BasicClassInCalendar?> = mutableListOf()
-        val type = group?.rodzaj
+        val previousBasicClasses = _convertedBasicClasses
+        _convertedBasicClasses = _convertedBasicClasses.filter{ !removePreviousVersion(it, groupRef)} as MutableList<CalendarItem?>
+        var tmpConvertedBasicClasses: MutableList<CalendarItem?> = mutableListOf()
+        val classType = group?.rodzaj
         val withWho = group?.prowadzaca
         if (group?.terminy != null) {
             for (basicClass in group.terminy) {
                 if (basicClass != null) {
                     if (shouldRetain(basicClass.termin, minimum, maximum) ) {
-                        tmpConvertedBasicClasses.add(
-                            groupRef?.let {
-                                BasicClassInCalendar(
-                                    it,
-                                    basicClass.termin,
-                                    type!!, withWho!!
-                                )
-                            }
-                        )
+                        val timestamp = basicClass.termin
+                        val date = timestamp.toDate()
+                        val type = "BASIC"
+                        if((classType != null) and (withWho != null)){
+                            tmpConvertedBasicClasses.add(
+                                CalendarItem(groupRef, null, timestamp, null,
+                                    date, null, classType!!, "", withWho!!, "",
+                                    type)
+                            )
+                        }
                     }
                 }
             }
         }
-
+        /* add new basic classes */
         _convertedBasicClasses.addAll(tmpConvertedBasicClasses)
-        //_basicClassesCalendar.apply { value = _convertedBasicClasses }
+        /* here compare classes and return differences */
+        updateCalendarList(previousBasicClasses, _convertedBasicClasses, false)
     }
 
-    private fun removePreviousVersion(it: BasicClassInCalendar?, groupR: DocumentReference?):Boolean {
-        return it?.groupRef == groupR;
+    private fun removePreviousVersion(it: CalendarItem?, groupR: DocumentReference?):Boolean {
+        return it?.groupRef1 == groupR;
     }
 
     private fun downloadAbsentClasses(){
@@ -308,36 +325,63 @@ class ModelView : ViewModel() {
 
             if (snapshot != null && snapshot.exists()) {
                 _absentClasses= snapshot.toObject(ZajeciaNieobecnosci::class.java)
-                var tmpConvertedAbsentClasses: MutableList<ClassInCalendar?> = mutableListOf()
-                Log.d(_TAG, _absentClasses.toString())
+                var tmpConvertedAbsentClasses: MutableList<CalendarItem?> = mutableListOf()
 
                 if (_absentClasses?.lista != null) {
                     for (absentClass in _absentClasses?.lista!!) {
                         if (absentClass != null) {
-                            if (shouldRetain(absentClass.terminN) || shouldRetain(absentClass.terminO)) {
-                                val typeO = _mapGroupRef[absentClass.grupaO]?.rodzaj
-                                val withWhoO = _mapGroupRef[absentClass.grupaO]?.prowadzaca
-                                val typeN = _mapGroupRef[absentClass.grupaN]?.rodzaj
-                                val withWhoN = _mapGroupRef[absentClass.grupaN]?.prowadzaca
-                                tmpConvertedAbsentClasses.add(
-                                    ClassInCalendar(
-                                        absentClass.terminN,
-                                        typeN!!,
-                                        withWhoN!!,
-                                        absentClass.terminO,
-                                        typeO,
-                                        withWhoO,
-                                        absentClass.mozliweOdrobienie
-                                    )
-                                )
+                            val groupRef1 = absentClass.grupaN
+                            val groupRef2 = absentClass.grupaO
+                            val classType1 =_mapGroupRef[absentClass.grupaN]?.rodzaj
+                            var classType2 =_mapGroupRef[absentClass.grupaO]?.rodzaj
+                            val withWho1 =_mapGroupRef[absentClass.grupaN]?.prowadzaca
+                            var withWho2 =_mapGroupRef[absentClass.grupaO]?.prowadzaca
+                            val timestamp1 =absentClass.terminN
+                            val timestamp2 =absentClass.terminO
+                            val date1 = timestamp1.toDate()
+                            var date2: Date? = null
+                            if(timestamp2 != null) date2 = timestamp2.toDate()
+                            if(classType2 == null) classType2 = ""
+                            if(withWho2 == null) withWho2 = ""
+
+                            if (shouldRetain(absentClass.terminN)){
+                                val type = getAbsentClassType(absentClass.mozliweOdrobienie, absentClass.terminO)
+                                tmpConvertedAbsentClasses.add(CalendarItem(
+                                    groupRef1, groupRef2, timestamp1, timestamp2,
+                                    date1, date2, classType1!!, classType2, withWho1!!, withWho2, type
+                                ))
+                            }
+                            if (shouldRetain(absentClass.terminO)) {
+                                tmpConvertedAbsentClasses.add(CalendarItem(
+                                    groupRef2, groupRef1, timestamp2!!, timestamp1,
+                                    date2!!, date1, classType2!!, classType1!!, withWho2!!, withWho1!!, "CATCH_UP"
+                                ))
                             }
                         }
                     }
                 }
-
+                /* here compare classes and return differences */
+                updateCalendarList(_convertedAbsentClasses, tmpConvertedAbsentClasses, true)
                 _convertedAbsentClasses = tmpConvertedAbsentClasses
-                //_absentClassesCalendar.apply { value = _convertedAbsentClasses }
             }
+        }
+    }
+
+    private fun getAbsentClassType(mozliweOdrobienie: String, terminO: Timestamp?): String {
+        if(terminO != null){
+            return "MISSED_CATCH_UP"
+        }
+        return when (mozliweOdrobienie) {
+            "usprawiedliwione" -> {
+                "EXCUSED"
+            }
+            "nieDoOdrobienia" -> {
+                "LOST"
+            }
+            "doOdrobienia" -> {
+                "MISSED"
+            }
+            else -> ""
         }
     }
 
@@ -353,30 +397,62 @@ class ModelView : ViewModel() {
 
             if (snapshot != null && snapshot.exists()) {
                 _additionalClasses = snapshot.toObject(ZajeciaDodatkowe::class.java)
-                var tmpConvertedAdditionalClasses: MutableList<ClassInCalendar?> = mutableListOf()
+                var tmpConvertedAdditionalClasses: MutableList<CalendarItem?> = mutableListOf()
                 Log.d(_TAG, _additionalClasses.toString())
                 if (_additionalClasses?.lista != null) {
                     for (additionalClass in _additionalClasses?.lista!!) {
                         if (additionalClass != null) {
                             if (shouldRetain(additionalClass.termin)) {
-                                val type = _mapGroupRef[additionalClass.grupa]?.rodzaj
+                                val groupRef = additionalClass.grupa
+                                val timestamp = additionalClass.termin
+                                val date = timestamp.toDate()
+                                val classType = _mapGroupRef[additionalClass.grupa]?.rodzaj
                                 val withWho = _mapGroupRef[additionalClass.grupa]?.prowadzaca
-                                if ((type != null) and (withWho != null)) {
+                                val type = "ADDITIONAL"
+                                if((classType != null) and (withWho != null)){
                                     tmpConvertedAdditionalClasses.add(
-                                        ClassInCalendar(
-                                            additionalClass.termin,
-                                            type!!,
-                                            withWho!!
-                                        )
+                                        CalendarItem(groupRef, null,timestamp, null,
+                                            date, null, classType!!, "", withWho!!, "",
+                                            type)
                                     )
                                 }
                             }
                         }
                     }
                 }
+                /* here compare classes and return differences */
+                updateCalendarList(_convertedAdditionalClasses, tmpConvertedAdditionalClasses, false)
+                /* change previous additional classes to new list */
                 _convertedAdditionalClasses = tmpConvertedAdditionalClasses
-                //_additionalClassesCalendar.apply { value = _convertedAdditionalClasses }
             }
+        }
+    }
+
+    private fun updateCalendarList(previousClasses: MutableList<CalendarItem?>, newClasses: MutableList<CalendarItem?>, ifAbsent : Boolean) {
+        val removed = previousClasses.minus(newClasses)
+        val added = newClasses.minus(previousClasses)
+
+        for(remove_one in removed){
+            _convertedCalendarClassesList.remove(remove_one)
+//            if(ifAbsent){
+//
+//            }
+        }
+
+        /*
+        Jeżeli znika nieobecność to usuń z listy + jak jest do odrobienia to też usuń z listy, i pokaż bazowe zajęcia w tym terminie
+Jak pojawia się nieobecność to dodaj jedno lub dwukrotnie i usuń bazowe zajęcia w tym terminie
+
+         */
+        for(add_one in added){
+            _convertedCalendarClassesList.add(add_one)
+//            if(ifAbsent){
+//                _convertedCalendarClassesList = _convertedCalendarClassesList.filter
+//            }
+        }
+
+        if(added.isNotEmpty() or removed.isNotEmpty() ){
+            _calendarClassesList.apply { value = _convertedCalendarClassesList }
         }
     }
 

@@ -10,8 +10,9 @@ import com.google.firebase.Timestamp
 import com.poturalakonieczka.hellyeeeah.R
 import android.icu.text.SimpleDateFormat
 import android.icu.util.ULocale
+import android.util.Log
 
-class CanceledAdapter(var context: Context, var mutableList: MutableList<Timestamp?> ): BaseAdapter() {
+class CanceledAdapter(var context: Context, var list: List<Timestamp?> ): BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var convertView = convertView
         if(convertView == null){
@@ -23,14 +24,15 @@ class CanceledAdapter(var context: Context, var mutableList: MutableList<Timesta
 
         var dayFormat = SimpleDateFormat("EEEE", ULocale.getDefault())
         var dateFormat = SimpleDateFormat("MM-dd-yyyy")
-        var date = mutableList[position]!!.toDate()
+        var date = list[position]!!.toDate()
         textDate.text = dateFormat.format(date)
         textDay.text = dayFormat.format(date)
+        Log.d("MU", textDay.text.toString())
         return convertView
     }
 
     override fun getItem(position: Int): Timestamp? {
-        return mutableList[position]
+        return list[position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -38,6 +40,6 @@ class CanceledAdapter(var context: Context, var mutableList: MutableList<Timesta
     }
 
     override fun getCount(): Int {
-        return mutableList.size
+        return list.size
     }
 }
