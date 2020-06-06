@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.firebase.Timestamp
+import com.poturalakonieczka.hellyeeeah.database.ZajeciaOdwolane
 import com.poturalakonieczka.hellyeeeah.layoutCalendar.CalendarAdapter
 import com.poturalakonieczka.hellyeeeah.layoutCalendar.CalendarItem
 import com.poturalakonieczka.hellyeeeah.layoutCalendar.decorators.CancelledDayDecorator
@@ -33,21 +34,13 @@ class CalendarFragment: Fragment(){
         BASIC, ADDITIONAL, CATCH_UP, MISSED,  MISSED_CATCH_UP, EXCUSED, LOST
     }
 
+    private var cancelledClassesCalendar: ZajeciaOdwolane? = null
     lateinit var adapter:CalendarAdapter
     private val TAG = "My-deb calendar"
-
-    private val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
-    private val monthFormat = SimpleDateFormat("MM", Locale.getDefault())
-    private val dayFormat = SimpleDateFormat("dd", Locale.getDefault())
 
     private lateinit var currentDateString: String
     /* list that contains only proper calendar items, must be actualized in model view properly */
     private var calendarClassesList: List<CalendarItem?> = mutableListOf()
-
-//    private var previousCancelledClasses: ZajeciaOdwolane = ZajeciaOdwolane()
-//    private var previousAdditionalClasses: MutableList<ClassInCalendar?> = mutableListOf()
-//    private var previousAbsentClasses: MutableList<ClassInCalendar?> = mutableListOf()
-//    private var previousBasicClasses: MutableList<BasicClassInCalendar?> = mutableListOf()
 
     private var listOfDecorator: MutableList<EventDotDecorator?> = mutableListOf()
     private var cancelledDecorator: CancelledDayDecorator =
@@ -62,9 +55,20 @@ class CalendarFragment: Fragment(){
         return inflater.inflate(R.layout.user_calendar_fragment, container, false)
     }
 
+    private val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
     private fun updateCalendarList(dateFilter : String){
-        Log.d("my-deb", dateFilter)
-        adapter.filter.filter(dateFilter)
+        if(cancelledClassesCalendar != null) {
+            for(date in cancelledClassesCalendar!!.listaTerminow){
+                if (date != null) {
+                    if(dateFilter == dateFormat.format(date.toDate())){
+                        adapter.filter("cancelled")
+                        return
+                    }
+                }
+            }
+        }
+        adapter.filter(dateFilter)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -73,26 +77,81 @@ class CalendarFragment: Fragment(){
         initCalendarView()
 
         adapter = CalendarAdapter(activity!!.applicationContext, calendarClassesList)
+        calendarList.adapter = adapter
 
         currentDateString = UserActivity.viewModel.getCurrentDateString()
-
-        Log.d("my-deb", "main")
-        updateCalendarList(currentDateString)
-        calendarList.adapter = adapter
 
         UserActivity.viewModel.calendarClassesList.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             calendarClassesList = it
             adapter.setList(calendarClassesList)
-            Log.d("my-deb", "observe")
+            currentDateString = UserActivity.viewModel.getCurrentDateString()
             updateCalendarList(currentDateString)
         })
-        
+
+        UserActivity.viewModel.cancelledClassesCalendar.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            cancelledClassesCalendar = it
+            currentDateString = UserActivity.viewModel.getCurrentDateString()
+            updateCalendarList(currentDateString)
+        })
+
+        UserActivity.viewModel.cancelledSetLive.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            removeDecorators()
+            cancelledDecorator.changeSet(it)
+            for (decorator in listOfDecorator){
+                decorator?.changeCancelledSet(it)
+            }
+            addDecorators()
+        })
+
+        UserActivity.viewModel.basicSetLive.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            removeDecorators()
+            listOfDecorator[ClassType.BASIC.ordinal]?.changeSet(it)
+            addDecorators()
+        })
+
+        UserActivity.viewModel.catchupSetLive.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            removeDecorators()
+            listOfDecorator[ClassType.CATCH_UP.ordinal]?.changeSet(it)
+            addDecorators()
+        })
+
+        UserActivity.viewModel.excusedSetLive.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            removeDecorators()
+            listOfDecorator[ClassType.EXCUSED.ordinal]?.changeSet(it)
+            addDecorators()
+        })
+
+        UserActivity.viewModel.additionalSetLive.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            removeDecorators()
+            listOfDecorator[ClassType.ADDITIONAL.ordinal]?.changeSet(it)
+            addDecorators()
+        })
+
+        UserActivity.viewModel.lostSetLive.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            removeDecorators()
+            listOfDecorator[ClassType.LOST.ordinal]?.changeSet(it)
+            addDecorators()
+        })
+
+        UserActivity.viewModel.missedcatchupSetLive.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            removeDecorators()
+            listOfDecorator[ClassType.MISSED_CATCH_UP.ordinal]?.changeSet(it)
+            addDecorators()
+        })
+
+        UserActivity.viewModel.missedSetLive.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+            removeDecorators()
+            listOfDecorator[ClassType.MISSED.ordinal]?.changeSet(it)
+            addDecorators()
+        })
         calendarView.setOnDateChangedListener { _: MaterialCalendarView, calendarDay: CalendarDay, _: Boolean ->
-            val dateString: String = calendarDay.day.toString()+"/"+calendarDay.month.toString()+"/"+calendarDay.year.toString()
-            Log.d("my-deb", "click")
-            UserActivity.viewModel.updateCurrentDateString(dateString)
-            updateCalendarList(dateString)
+            val currentDay: Calendar = Calendar.getInstance()
+            currentDay.set(calendarDay.year,calendarDay.month-1,calendarDay.day)
+            UserActivity.viewModel.updateCurrentDateString(currentDay)
+            currentDateString = UserActivity.viewModel.getCurrentDateString()
+            updateCalendarList(currentDateString)
         }
+
     }
 
     private fun removeDecorators(){

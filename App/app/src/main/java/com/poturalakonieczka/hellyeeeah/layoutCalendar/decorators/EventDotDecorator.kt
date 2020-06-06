@@ -10,6 +10,15 @@ import java.util.*
 class EventDotDecorator(private val color: Int, private val spanType: Int, private var dates: HashSet<CalendarDay?>): DayViewDecorator {
     private val xOffsets = intArrayOf( -15, -5, 5, 15, -10, 0 , 10)
     private val yOffsets = intArrayOf( 0,0 ,0,0,  -10, -10, -10)
+    private var cancelledDays: HashSet<CalendarDay?>  = hashSetOf()
+
+    fun changeCancelledSet(newSet: HashSet<CalendarDay?>){
+        cancelledDays = newSet
+    }
+
+    fun changeSet(newSet: HashSet<CalendarDay?>){
+        dates = newSet
+    }
 
     fun addDate(day: CalendarDay?): Boolean {
         return dates.add(day)
@@ -20,13 +29,13 @@ class EventDotDecorator(private val color: Int, private val spanType: Int, priva
     }
 
     override fun shouldDecorate(day: CalendarDay): Boolean {
-        return dates.contains(day)
+        return (dates.contains(day) and (!cancelledDays.contains(day)))
     }
 
     override fun decorate(view: DayViewFacade) {
         val span: LineBackgroundSpan =
             CustomDotSpan(
-                6F,
+                5F,
                 color,
                 xOffsets[spanType],
                 yOffsets[spanType]
