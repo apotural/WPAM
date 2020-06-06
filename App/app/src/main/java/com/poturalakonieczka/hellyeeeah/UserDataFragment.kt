@@ -48,9 +48,12 @@ class UserDataFragment : Fragment() {
         UserActivity.viewModel.cancelledClassesWeek.observe(activity!!, Observer {
             Log.d(_TAG, "refresh canceled")
             if(it != null){
+                if(it.size > 0){
+                    section_canceled.visibility = View.VISIBLE
+                }
                 canceledAdapter = CanceledAdapter(activity!!.applicationContext, it)
                 list_canceled.adapter = canceledAdapter
-                section_canceled.visibility = View.VISIBLE
+
             }
 
         })
