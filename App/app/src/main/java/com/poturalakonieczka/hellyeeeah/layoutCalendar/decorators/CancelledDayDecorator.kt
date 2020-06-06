@@ -17,6 +17,10 @@ import java.util.HashSet
 class CancelledDayDecorator(): DayViewDecorator  {
     private var dates: HashSet<CalendarDay?> = hashSetOf()
 
+    fun changeSet(newSet: HashSet<CalendarDay?>){
+        dates = newSet
+    }
+
     fun addDate(day: CalendarDay?): Boolean {
         return dates.add(day)
     }

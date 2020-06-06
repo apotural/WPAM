@@ -10,8 +10,10 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 import com.poturalakonieczka.hellyeeeah.database.*
 import com.poturalakonieczka.hellyeeeah.layoutCalendar.CalendarItem
+import com.prolificinteractive.materialcalendarview.CalendarDay
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.HashSet
 
 
 class ModelView : ViewModel() {
@@ -34,6 +36,10 @@ class ModelView : ViewModel() {
     private var _additionalClasses: ZajeciaDodatkowe? = null
     private var _absentClasses: ZajeciaNieobecnosci? = null
     private var _groupHistory: HistoriaGrup? = null
+
+    private val yearFormat = SimpleDateFormat("yyyy", Locale.getDefault())
+    private val monthFormat = SimpleDateFormat("MM", Locale.getDefault())
+    private val dayFormat = SimpleDateFormat("dd", Locale.getDefault())
 
     private var maxDateCalendar: Date? = null
     private var minDateCalendar: Date? = null
@@ -77,6 +83,31 @@ class ModelView : ViewModel() {
 
     /* only for calendar fragment */
     private var _currentCalendarSelectedDate: String? = null
+
+    private val _basicSetLive = MutableLiveData<HashSet<CalendarDay?>>().apply { value = hashSetOf() }
+    val basicSetLive: LiveData<HashSet<CalendarDay?>>
+        get() = _basicSetLive
+    private val _additionalSetLive = MutableLiveData<HashSet<CalendarDay?>>().apply { value = hashSetOf() }
+    val additionalSetLive: LiveData<HashSet<CalendarDay?>>
+        get() = _additionalSetLive
+    private val _catchupSetLive = MutableLiveData<HashSet<CalendarDay?>>().apply { value = hashSetOf() }
+    val catchupSetLive: LiveData<HashSet<CalendarDay?>>
+        get() = _catchupSetLive
+    private val _missedcatchupSetLive = MutableLiveData<HashSet<CalendarDay?>>().apply { value = hashSetOf() }
+    val missedcatchupSetLive: LiveData<HashSet<CalendarDay?>>
+        get() = _missedcatchupSetLive
+    private val _lostSetLive = MutableLiveData<HashSet<CalendarDay?>>().apply { value = hashSetOf() }
+    val lostSetLive: LiveData<HashSet<CalendarDay?>>
+        get() = _lostSetLive
+    private val _excusedSetLive = MutableLiveData<HashSet<CalendarDay?>>().apply { value = hashSetOf() }
+    val excusedSetLive: LiveData<HashSet<CalendarDay?>>
+        get() = _excusedSetLive
+    private val _missedSetLive = MutableLiveData<HashSet<CalendarDay?>>().apply { value = hashSetOf() }
+    val missedSetLive: LiveData<HashSet<CalendarDay?>>
+        get() = _missedSetLive
+    private val _cancelledSetLive = MutableLiveData<HashSet<CalendarDay?>>().apply { value = hashSetOf() }
+    val cancelledSetLive: LiveData<HashSet<CalendarDay?>>
+        get() = _cancelledSetLive
 
     fun getMaxDate(): Date? {
         return maxDateCalendar
@@ -221,11 +252,32 @@ class ModelView : ViewModel() {
                 val week: Calendar = Calendar.getInstance()
                 week.add(Calendar.DATE, 7)
 
+                updateCancelDecorator()
+
                 var copy = _cancelledClasses?.listaTerminow
                 copy = copy?.filter { shouldRetain(it, Calendar.getInstance().time, week.time) } as MutableList<Timestamp?>
                 _cancelledClassesWeek.value = copy
             }
         }
+    }
+
+    private fun updateCancelDecorator() {
+        val cancelledSet: HashSet<CalendarDay?> = hashSetOf()
+        if (_cancelledClasses != null) {
+            for (singleTimestamp in _cancelledClasses?.listaTerminow!!) {
+                if (singleTimestamp != null) {
+                    val date: Date = singleTimestamp.toDate()
+                    val calendarDay = CalendarDay.from(
+                        yearFormat.format(date).toInt(),
+                        monthFormat.format(date).toInt(),
+                        dayFormat.format(date).toInt()
+                    )
+
+                    cancelledSet.add(calendarDay)
+                }
+            }
+        }
+        _cancelledSetLive.apply { value = cancelledSet }
     }
 
     private fun shouldRetain(time: Timestamp?, minDate: Date? = minDateCalendar, maxDate: Date? = maxDateCalendar) : Boolean{
@@ -455,8 +507,63 @@ class ModelView : ViewModel() {
 
         if(added.isNotEmpty() or removed.isNotEmpty() ){
             _calendarClassesList.apply { value = _convertedCalendarClassesList }
+            updateDecorators()
         }
     }
+
+    private fun updateDecorators(){
+        val basicSet:HashSet<CalendarDay?> = hashSetOf()
+        val additionalSet:HashSet<CalendarDay?> = hashSetOf()
+        val catchupSet:HashSet<CalendarDay?> = hashSetOf()
+        val missedcatchupSet:HashSet<CalendarDay?> = hashSetOf()
+        val lostSet:HashSet<CalendarDay?> = hashSetOf()
+        val excusedSet:HashSet<CalendarDay?> = hashSetOf()
+        val missedSet:HashSet<CalendarDay?> = hashSetOf()
+
+        for (singleClass in _convertedCalendarClassesList){
+            if (singleClass != null) {
+                val date: Date = singleClass.timestamp1.toDate()
+                val calendarDay = CalendarDay.from(
+                    yearFormat.format(date).toInt(),
+                    monthFormat.format(date).toInt(),
+                    dayFormat.format(date).toInt())
+
+                when (singleClass.type) {
+                    "BASIC" -> {
+                        basicSet.add(calendarDay)
+                    }
+                    "ADDITIONAL" -> {
+                        additionalSet.add(calendarDay)
+                    }
+                    "MISSED_CATCH_UP" -> {
+                        missedcatchupSet.add(calendarDay)
+                    }
+                    "LOST" -> {
+                        lostSet.add(calendarDay)
+                    }
+                    "MISSED" -> {
+                        missedSet.add(calendarDay)
+                    }
+                    "EXCUSED" -> {
+                        excusedSet.add(calendarDay)
+                    }
+                    "CATCH_UP" -> {
+                        catchupSet.add(calendarDay)
+                    }
+                }
+
+
+            }
+        }
+        _basicSetLive.apply { value = basicSet }
+        _additionalSetLive.apply { value = additionalSet }
+        _catchupSetLive.apply { value = catchupSet }
+        _missedcatchupSetLive.apply { value = missedcatchupSet }
+        _lostSetLive.apply { value = lostSet }
+        _excusedSetLive.apply { value = excusedSet }
+        _missedSetLive.apply { value = missedSet}
+    }
+
 
     private fun addClassesIfBasic(it: CalendarItem?, timestamp1: Timestamp): Boolean {
         if (it != null) {
