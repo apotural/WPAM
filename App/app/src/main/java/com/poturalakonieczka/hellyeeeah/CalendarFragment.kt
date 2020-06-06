@@ -2,6 +2,7 @@ package com.poturalakonieczka.hellyeeeah
 
 import android.database.DataSetObserver
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
@@ -39,8 +40,9 @@ class CalendarFragment: Fragment(){
     private val monthFormat = SimpleDateFormat("MM", Locale.getDefault())
     private val dayFormat = SimpleDateFormat("dd", Locale.getDefault())
 
+    private lateinit var currentDateString: String
     /* list that contains only proper calendar items, must be actualized in model view properly */
-    var calendarClassesList: List<CalendarItem?> = mutableListOf()
+    private var calendarClassesList: List<CalendarItem?> = mutableListOf()
 
 //    private var previousCancelledClasses: ZajeciaOdwolane = ZajeciaOdwolane()
 //    private var previousAdditionalClasses: MutableList<ClassInCalendar?> = mutableListOf()
@@ -61,6 +63,7 @@ class CalendarFragment: Fragment(){
     }
 
     private fun updateCalendarList(dateFilter : String){
+        Log.d("my-deb", dateFilter)
         adapter.filter.filter(dateFilter)
     }
 
@@ -69,22 +72,25 @@ class CalendarFragment: Fragment(){
 
         initCalendarView()
 
+        adapter = CalendarAdapter(activity!!.applicationContext, calendarClassesList)
+
+        currentDateString = UserActivity.viewModel.getCurrentDateString()
+
+        Log.d("my-deb", "main")
+        updateCalendarList(currentDateString)
+        calendarList.adapter = adapter
+
         UserActivity.viewModel.calendarClassesList.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             calendarClassesList = it
             adapter.setList(calendarClassesList)
-            /* update filtering again */
+            Log.d("my-deb", "observe")
+            updateCalendarList(currentDateString)
         })
-        adapter = CalendarAdapter(activity!!.applicationContext, calendarClassesList)
-
-        val currentDay: Calendar = Calendar.getInstance()
-        val currentDateString: String = currentDay.get(Calendar.MONTH).toString() +"/"+currentDay.get(Calendar.MONTH).toString()+
-                                        "/"+currentDay.get(Calendar.YEAR).toString()
-        calendarList.adapter = adapter
-
-        updateCalendarList(currentDateString)
         
         calendarView.setOnDateChangedListener { _: MaterialCalendarView, calendarDay: CalendarDay, _: Boolean ->
             val dateString: String = calendarDay.day.toString()+"/"+calendarDay.month.toString()+"/"+calendarDay.year.toString()
+            Log.d("my-deb", "click")
+            UserActivity.viewModel.updateCurrentDateString(dateString)
             updateCalendarList(dateString)
         }
     }

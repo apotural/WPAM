@@ -177,8 +177,6 @@ class CalendarAdapter (private val appContext: Context, private val calendarList
                         if(it == null)
                             false
                         else {
-                            Log.d("my-deb try", it.date1.toString())
-
                             dateFormat.format(it.date1) == dateFormat.format(chosenDate)
                         }
                     }
@@ -190,7 +188,6 @@ class CalendarAdapter (private val appContext: Context, private val calendarList
 
     fun setList(calendarClassesList: List<CalendarItem?>) {
         mCalendarList = calendarClassesList
-        notifyDataSetChanged()
     }
 
 }
