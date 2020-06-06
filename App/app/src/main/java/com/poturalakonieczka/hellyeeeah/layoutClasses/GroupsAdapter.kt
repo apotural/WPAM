@@ -9,17 +9,15 @@ import android.widget.TextView
 import com.poturalakonieczka.hellyeeeah.R
 import com.poturalakonieczka.hellyeeeah.database.Grupa
 import android.icu.text.SimpleDateFormat
-import android.util.Log
+
 
 class GroupsAdapter(var context: Context, var list: List<Grupa?> ): BaseAdapter() {
-    private val _TAG = "My-log GroupsAdapter"
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var convertView = convertView
         if(convertView == null){
             val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = inflater.inflate(R.layout.group_item, null)
         }
-        Log.d(_TAG, "getting")
         var textName: TextView? = convertView?.findViewById(R.id.class_type)
         textName?.text = list[position]?.rodzaj?.toUpperCase()
         var textLevel :TextView? = convertView?.findViewById(R.id.level_body)
@@ -32,7 +30,6 @@ class GroupsAdapter(var context: Context, var list: List<Grupa?> ): BaseAdapter(
         textHour?.text = dateFormat.format(date)
         var texTeacher : TextView? = convertView?.findViewById(R.id.teacher_body)
         texTeacher?.text = list[position]?.prowadzaca
-        Log.d(_TAG, list[position]?.rodzaj+" "+list[position]?.prowadzaca)
         return convertView!!
     }
 

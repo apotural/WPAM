@@ -9,12 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.poturalakonieczka.hellyeeeah.database.Grupa
+import com.poturalakonieczka.hellyeeeah.layoutClasses.CanceledAdapter
 import com.poturalakonieczka.hellyeeeah.layoutClasses.GroupsAdapter
 import kotlinx.android.synthetic.main.user_data_fragment.*
 
 
 class UserDataFragment : Fragment() {
     private var groupsAdapter: GroupsAdapter? = null
+    private var canceledAdapter: CanceledAdapter? = null
     private val _TAG: String = "My-log UserDataFragment"
     companion object {
         fun newInstance() = UserDataFragment()
@@ -29,15 +31,26 @@ class UserDataFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Log.d(_TAG, "Activity created")
-        //groupsAdapter = GroupsAdapter(activity!!.applicationContext, UserActivity.viewModel.participantGroupsLive.value!!)
         groupsAdapter = UserActivity.viewModel.participantGroupsLive.value?.let {
             GroupsAdapter(activity!!.applicationContext , it)
         };
         groupsAdapter!!.notifyDataSetChanged()
         list_groups.adapter = groupsAdapter
         UserActivity.viewModel.participantGroupsLive.observe(activity!!, Observer {
-            Log.d(_TAG, "refresh")
             groupsAdapter?.notifyDataSetChanged()
+        })
+
+        canceledAdapter = UserActivity.viewModel.cancelledClassesWeek.value?.let {
+            CanceledAdapter(activity!!.applicationContext , it.listaTerminow)
+        };
+        list_canceled.adapter = canceledAdapter
+        UserActivity.viewModel.cancelledClassesWeek.observe(activity!!, Observer {
+            Log.d(_TAG, "refresh canceled")
+            if(it != null){
+                canceledAdapter = CanceledAdapter(activity!!.applicationContext, it.listaTerminow)
+                list_canceled.adapter = canceledAdapter
+            }
+
         })
 
         UserActivity.viewModel.participantName.observe(activity!!, Observer {
