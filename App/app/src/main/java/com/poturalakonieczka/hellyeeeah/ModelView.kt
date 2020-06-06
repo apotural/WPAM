@@ -1,6 +1,5 @@
 package com.poturalakonieczka.hellyeeeah
 
-import android.icu.text.DateFormat.DAY
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,9 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 import com.poturalakonieczka.hellyeeeah.database.*
-import com.poturalakonieczka.hellyeeeah.layoutCalendar.BasicClassInCalendar
 import com.poturalakonieczka.hellyeeeah.layoutCalendar.CalendarItem
-import com.poturalakonieczka.hellyeeeah.layoutCalendar.ClassInCalendar
 import java.util.*
 
 
@@ -76,6 +73,9 @@ class ModelView : ViewModel() {
     val participantName : LiveData<Kursant?>
         get() = _participantData
     /*  _participant is somewhere above  */
+
+    /* only for calendar fragment */
+    private var _currentCalendarSelectedDate: String? = null
 
     fun getMaxDate(): Date? {
         return maxDateCalendar
@@ -434,26 +434,40 @@ class ModelView : ViewModel() {
 
         for(remove_one in removed){
             _convertedCalendarClassesList.remove(remove_one)
-//            if(ifAbsent){
-//
-//            }
+            if (remove_one != null) {
+                if(ifAbsent && remove_one.type != "CATCH_UP"){
+                    _convertedCalendarClassesList.add(_convertedBasicClasses.find { addClassesIfBasic(
+                        it, remove_one.timestamp1)  })
+                }
+            }
         }
 
-        /*
-        Jeżeli znika nieobecność to usuń z listy + jak jest do odrobienia to też usuń z listy, i pokaż bazowe zajęcia w tym terminie
-Jak pojawia się nieobecność to dodaj jedno lub dwukrotnie i usuń bazowe zajęcia w tym terminie
-
-         */
         for(add_one in added){
             _convertedCalendarClassesList.add(add_one)
-//            if(ifAbsent){
-//                _convertedCalendarClassesList = _convertedCalendarClassesList.filter
-//            }
+            if (add_one != null) {
+                if(ifAbsent && add_one.type != "CATCH_UP"){ /* add absent class, hide basic class */
+                    _convertedCalendarClassesList = _convertedCalendarClassesList.filter{ removeClassesIfBasic(
+                        it, add_one.timestamp1)} as MutableList<CalendarItem?>
+                }
+            }
         }
 
         if(added.isNotEmpty() or removed.isNotEmpty() ){
             _calendarClassesList.apply { value = _convertedCalendarClassesList }
         }
+    }
+
+    private fun addClassesIfBasic(it: CalendarItem?, timestamp1: Timestamp): Boolean {
+        if (it != null) {
+            if((it.timestamp1 == timestamp1) and (it.type == "BASIC")) return true
+        }
+        return false
+    }
+
+    private fun removeClassesIfBasic(it: CalendarItem?, timestamp1: Timestamp): Boolean {
+        if(it == null) return false
+        if((it.type == "BASIC") and (it.timestamp1 == timestamp1)) return false
+        return true
     }
 
     private fun downloadClasses(){
@@ -473,6 +487,19 @@ Jak pojawia się nieobecność to dodaj jedno lub dwukrotnie i usuń bazowe zaj�
 
     fun getParticipantMail():String?{
         return _user?.email
+    }
+
+    fun getCurrentDateString(): String {
+        if(_currentCalendarSelectedDate == null){
+            val currentDay: Calendar = Calendar.getInstance()
+            _currentCalendarSelectedDate = currentDay.get(Calendar.DATE).toString() +"/"+(currentDay.get(Calendar.MONTH)+1).toString()+
+                    "/"+currentDay.get(Calendar.YEAR).toString()
+        }
+        return _currentCalendarSelectedDate!!
+    }
+
+    fun updateCurrentDateString(dateString: String) {
+        _currentCalendarSelectedDate = dateString
     }
 }
 
