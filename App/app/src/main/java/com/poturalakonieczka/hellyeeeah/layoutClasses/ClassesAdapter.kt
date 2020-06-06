@@ -20,7 +20,7 @@ class ClassesAdapter(var context: Context, var mutableList: MutableList<Timestam
             convertView = inflater.inflate(R.layout.card_view_classes, null)
         }
         var textView: TextView = convertView!!.findViewById(R.id.dateClasses)
-        var dateFormat = SimpleDateFormat("EEE, MM-dd-yyyy HH:mm", ULocale.getDefault())
+        var dateFormat = SimpleDateFormat("EEE, dd-MM-yyyy HH:mm", ULocale.getDefault())
         var date = mutableList[position]!!.toDate()
         textView.text = dateFormat.format(date)
         return convertView
