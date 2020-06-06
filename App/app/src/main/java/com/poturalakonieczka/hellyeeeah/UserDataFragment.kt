@@ -50,6 +50,7 @@ class UserDataFragment : Fragment() {
             if(it != null){
                 canceledAdapter = CanceledAdapter(activity!!.applicationContext, it)
                 list_canceled.adapter = canceledAdapter
+                section_canceled.visibility = View.VISIBLE
             }
 
         })
